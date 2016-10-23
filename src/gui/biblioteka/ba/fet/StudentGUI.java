@@ -805,9 +805,7 @@ public class StudentGUI {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				int row = tableKnjige.rowAtPoint(evt.getPoint());
 				int col = tableKnjige.columnAtPoint(evt.getPoint());
-				System.out.println( "test " );
 				
-				System.out.println( row + " " + col);
 				if (row >= 0 && col >= 0 && evt.getClickCount() == 2) {
 					/*
 					 * ako dodje do duplog klika, iz odabranog reda procitaj vrijednost za sifStdenta, i prosljedi to u funkciju resetStudentBodovi
@@ -959,7 +957,7 @@ public class StudentGUI {
 		JRadioButton rdbtnZvanje = new JRadioButton("Zvanje");
 		rdbtnZvanje.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				filterTableByColumn(tableNastavnici, 2, txtFilterNastavnici);
+				filterTableByColumn(tableNastavnici, 1, txtFilterNastavnici);
 			}
 		});
 		rdbtnZvanje.setBounds(393, 12, 73, 23);

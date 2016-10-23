@@ -108,6 +108,12 @@ public class GetDbTables {
 		return TStudent.listaStudent.get(0);
 	}
 	
+	public static int getSifStudentByPrezimeIme(String prezIme){
+		TStudent.listaStudent.clear();
+		DBStudent.getSifStudentByPrezimeIme(prezIme);
+		return TStudent.listaStudent.get(0).getSifStudent();
+	}
+	
 	public static ArrayList<MSemestar> getTableSemestr(){
 		TSemestar.listaSemestar.clear();
 		DBSemestar.getSemestar();

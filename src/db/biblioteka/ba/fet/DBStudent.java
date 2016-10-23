@@ -165,6 +165,42 @@ public class DBStudent {
 		}
 	}
 	
+	public static void getSifStudentByPrezimeIme(String prezimeIme){
+		String[] niz = prezimeIme.split(" ");
+		String SQL2 = "SELECT * FROM student WHERE prezStudent = ? AND imeStudent = ?";
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			dbConnection = DBUtil.getConnection(DBType.MYSQL);
+			preparedStatement = dbConnection.prepareStatement(SQL2);
+			preparedStatement.setString(1, niz[1]);
+			preparedStatement.setString(2, niz[0]);
+
+			ResultSet rs = preparedStatement.executeQuery();
+			TStudent.getListaStudent(rs);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (dbConnection != null) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	
+	
+	
 	public static void getStudentSaZaduzenjima(){
 		String SQL = "SELECT * FROM student WHERE brPosudjenihKnjiga > 0";
 		try(
