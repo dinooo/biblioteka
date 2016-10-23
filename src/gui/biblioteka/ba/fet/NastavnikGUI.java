@@ -897,7 +897,6 @@ public class NastavnikGUI {
 		frame.getContentPane().add(sveKnjigezaPredmet);
 		sveKnjigezaPredmet.getContentPane().setLayout(null);
 		prikazSveKnjigeZaPredmet(sveKnjigezaPredmet, predmet);
-
 	}
 
 	private void sviAutori() {
@@ -3710,7 +3709,6 @@ public class NastavnikGUI {
 		});
 		
 	}
-
 	
 	private void prikazSviPredmetiZaNastavnika(JInternalFrame sviPredmeti, String prezIme) {
 		JScrollPane scrollPane = new JScrollPane();
@@ -3801,12 +3799,6 @@ public class NastavnikGUI {
 		
 	}
 	
-	
-	/*
-	 *  ovo se poziva samo ako je nastavnik bibliotekar
-	 */
-	
-
 	private void prikazSviNastavnici(JInternalFrame sviNastavnici) {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 43, 450, 259);
@@ -3948,7 +3940,6 @@ public class NastavnikGUI {
 		}
 	}
 	
-	
 	private static void prikazSviStudenti(JInternalFrame sviStudenti) {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 12, 567, 252);
@@ -3997,13 +3988,6 @@ public class NastavnikGUI {
 		 * tj da bibliotekar moze resetovati negativne bodove.
 		 * pristup ovoj opciji ima samo bibliotekar, pa treba o tome voditi racuna
 		 */
-		int bibliotekar = -1;
-		
-		for (MNastavnik nast : GetDbTables.getTableNastavnici()) {
-			if (nast.getSifNastavnik() == LoginGUI.sifNastavnikActive) { //provjeravamo da li je aktivni nastavnik bibliotekar
-				bibliotekar = nast.getBibliotekar(); //1 za da, 0 za ne
-			}
-		}
 
 			tableStudenti.addMouseListener(new MouseAdapter() {
 				@Override
@@ -4105,8 +4089,7 @@ public class NastavnikGUI {
 			});
 		}
 	}
-	
-	
+		
 	private void resetNastavnikBodovi(int sifNast){
 		JInternalFrame resetBodoviNast = new JInternalFrame("Reset negativnih bodova", true, true, true);
 		resetBodoviNast.setBounds(12, 12, 377, 188);
@@ -4246,9 +4229,8 @@ public class NastavnikGUI {
 		btnPoniti.setBounds(255, 125, 100, 25);
 		resetBodoviStud.getContentPane().add(btnPoniti);
 	}
+
 	//dio za bibliotekara
-
-
 	private void novaKnjiga() {
 		
 		JInternalFrame novaKnjiga = new JInternalFrame("Unos knjige", true, true, true);
@@ -5766,7 +5748,6 @@ public class NastavnikGUI {
 
 	}
 	
-	
 	private void odobriRezervacijuNast(int sifRezPrimjNast) {
 		JInternalFrame odobriRezNast = new JInternalFrame("Odobravanje rezervacije", true, true, true);
 		odobriRezNast.setBounds(12, 12, 403, 221);
@@ -6312,8 +6293,6 @@ public class NastavnikGUI {
 			public void actionPerformed(ActionEvent e) {
 				MPrimjerak primjerak = GetDbTables.getPrimjerakByInventBroj(invBr);
 				MRezervacija rezervacija = GetDbTables.getRezervacijaBySifPrimjerak(primjerak.getSifPrimjerak());
-				MStudent student = GetDbTables.getStudentBySifra(rezervacija.getSifKorisnik());
-				MNastavnik nastavnik = GetDbTables.getNastavnikBySifra(rezervacija.getSifKorisnik());
 				if(rezervacija.getNastStud() == 2)
 					izdateKnjigeStudenti();
 				else if(rezervacija.getNastStud() == 1)
@@ -6327,8 +6306,6 @@ public class NastavnikGUI {
 
 	}
 
-	
-	
 	
 	/*
 	 * filtriranje tabela

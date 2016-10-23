@@ -633,6 +633,15 @@ public class StudentGUI {
 
 	}
 	
+	private void sveKnjigeZaPredmet(String predmet) {
+		JInternalFrame sveKnjigezaPredmet = new JInternalFrame("Knjige", true, true, true);
+		sveKnjigezaPredmet.setBounds(0, 12, 799, 377);
+		sveKnjigezaPredmet.setVisible(true);
+		frame.getContentPane().add(sveKnjigezaPredmet);
+		sveKnjigezaPredmet.getContentPane().setLayout(null);
+		prikazSveKnjigeZaPredmet(sveKnjigezaPredmet, predmet);
+	}
+	
 	private void sviAutori() {
 		JInternalFrame sviAutori = new JInternalFrame("Autori", true, true, true);
 		sviAutori.setBounds(12, 12, 282, 357);
@@ -683,9 +692,15 @@ public class StudentGUI {
 		prikazSviPredmeti(sviPredmeti);
 	}
 	
-	/*
-	 * zavrseno filtriranje po kolonama samo, treba staviti da ako klikne 2 puta na kolonu da izbaci prozor za zaduzivanje te knjige
-	 */
+	private void sviPredmetiZaNastavnika(String nastavnik) {
+		JInternalFrame sviPredmeti = new JInternalFrame("Predmeti", true, true, true);
+		sviPredmeti.setBounds(12, 12, 682, 308);
+		sviPredmeti.setVisible(true);
+		frame.getContentPane().add(sviPredmeti);
+		sviPredmeti.getContentPane().setLayout(null);
+		prikazSviPredmetiZaNastavnika(sviPredmeti, nastavnik);
+	}
+	
 	private void prikazSveKnjige(JInternalFrame sveKnjige) {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 39, 765, 321);
@@ -966,9 +981,144 @@ public class StudentGUI {
 		});
 		
 	}
-	/*
-	 * zavrseno filtriranje po kolonama samo, treba staviti da ako klikne 2 puta na kolonu da izbaci prozor sa knjigama od tog autora
-	 */
+	
+	private void prikazSveKnjigeZaPredmet(JInternalFrame sveKnjige, String predmet) {
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 39, 765, 321);
+		sveKnjige.getContentPane().add(scrollPane);
+
+		tableKnjige = new JTable(){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int row, int column){
+				return false; //onemogucujemo editovanje nakon dva klika
+			}
+		};
+		
+		scrollPane.setViewportView(tableKnjige);
+		tableKnjige.setModel(new DefaultTableModel(
+				new Object[][] {
+				},
+				new String[] {
+						"Originalni naslov", "Tip", "Izdava\u010D", "Godina izdanja", "Br.prim."
+				}
+				));
+		tableKnjige.getColumnModel().getColumn(0).setPreferredWidth(234);
+		tableKnjige.getColumnModel().getColumn(2).setPreferredWidth(200);
+		tableKnjige.getColumnModel().getColumn(3).setPreferredWidth(97);
+		tableKnjige.getColumnModel().getColumn(4).setPreferredWidth(50);
+
+
+		/*
+		 * Praznimo sve elemente tabele 
+		 */
+		DefaultTableModel model = (DefaultTableModel) tableKnjige.getModel();
+		model.setRowCount(0);
+
+		for (MKnjiga knjiga : GetDbTables.getTableKnjigeZaPredmet(predmet)) {
+
+			String vrstaKnjige = new String();
+			for (MVrstaKnjige vrKnj : GetDbTables.getTableVrstaKnjige()) {
+				if(knjiga.getSifVrstaKnjige() == vrKnj.getSifVrstaKnjige()){
+					vrstaKnjige = vrKnj.getVrsta();
+					break;
+				}
+			}
+			String izdavacStr = new String();			
+			for (MIzdavac izd : GetDbTables.getTableIzdavaci()) {
+				if(knjiga.getSifIzdavac() == izd.getSifIzdavac()){
+					izdavacStr = izd.getNazIzdavac();
+					break;
+				}
+			}
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+			String godIzdanja = dateFormat.format(knjiga.getGodIzdanja());
+
+			model.addRow(new Object[]{knjiga.getOrigNaslov(), vrstaKnjige, izdavacStr, godIzdanja, String.valueOf(knjiga.getBrPrimjeraka())});
+		}
+		
+		/*
+		 * table sorter
+		 */
+		
+		txtFilterTableKnjige = new JTextField();
+		txtFilterTableKnjige.setBounds(12, 10, 256, 19);
+		sveKnjige.getContentPane().add(txtFilterTableKnjige);
+		txtFilterTableKnjige.setColumns(10);
+		
+		JRadioButton rdbtnNaslov = new JRadioButton("Naslov");
+		rdbtnNaslov.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				filterTableByColumn(tableKnjige, 0, txtFilterTableKnjige);
+			}
+		});
+		rdbtnNaslov.setBounds(276, 8, 72, 23);
+		sveKnjige.getContentPane().add(rdbtnNaslov);
+		rdbtnNaslov.setSelected(true);
+		if(rdbtnNaslov.isSelected()) {
+			filterTableByColumn(tableKnjige, 0, txtFilterTableKnjige);
+		}
+		
+		JRadioButton rdbtnTip = new JRadioButton("Tip");
+		rdbtnTip.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				filterTableByColumn(tableKnjige, 1, txtFilterTableKnjige);
+			}
+		});
+		rdbtnTip.setBounds(352, 8, 46, 23);
+		sveKnjige.getContentPane().add(rdbtnTip);
+		
+		JRadioButton rdbtnIzdavac = new JRadioButton("Izdavac");
+		rdbtnIzdavac.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				filterTableByColumn(tableKnjige, 2, txtFilterTableKnjige);
+			}
+		});
+		rdbtnIzdavac.setBounds(402, 8, 78, 23);
+		sveKnjige.getContentPane().add(rdbtnIzdavac);
+		
+		JRadioButton rdbtnGodinaIzdanja = new JRadioButton("Godina izdanja");
+		rdbtnGodinaIzdanja.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				filterTableByColumn(tableKnjige, 3, txtFilterTableKnjige);
+			}
+		});
+		rdbtnGodinaIzdanja.setBounds(484, 8, 131, 23);
+		sveKnjige.getContentPane().add(rdbtnGodinaIzdanja);
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(rdbtnNaslov);
+		group.add(rdbtnTip);
+		group.add(rdbtnIzdavac);
+		group.add(rdbtnGodinaIzdanja);
+		
+		
+		
+		/*
+		 * ako se duplo klikne na knjigu, da se otvori prozor za posudjivanje te knjige
+		 */
+		tableKnjige.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				int row = tableKnjige.rowAtPoint(evt.getPoint());
+				int col = tableKnjige.columnAtPoint(evt.getPoint());
+				System.out.println( "test " );
+				
+				System.out.println( row + " " + col);
+				if (row >= 0 && col >= 0 && evt.getClickCount() == 2) {
+					/*
+					 * ako dodje do duplog klika, iz odabranog reda procitaj vrijednost za sifStdenta, i prosljedi to u funkciju resetStudentBodovi
+					 * koja je ustvari novi prozor za resetovanje negativnih bodova 
+					 */
+					String origNaslov = (String) tableKnjige.getModel().getValueAt(tableKnjige.convertRowIndexToModel(row), 0);
+					zaduziKnjigu(origNaslov);			
+					sveKnjige.dispose();
+				}
+			}
+		});
+		
+	}
+	
 	private void prikazSviAutori(JInternalFrame sviAutori) {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 43, 250, 270);
@@ -1030,9 +1180,6 @@ public class StudentGUI {
 		
 	}
 
-	/*
-	 * zavrseno filtriranje po kolonama samo, treba staviti da ako klikne 2 puta na kolonu da izbaci prozor sa knjigama od tih izdavaca
-	 */	
 	public static void prikazSviIzdavaci(JInternalFrame sviIzdavaci) {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 43, 259, 274);
@@ -1071,9 +1218,6 @@ public class StudentGUI {
 		
 	}
 
-	/*
-	 * zavrseno filtriranje po kolonama samo, treba staviti da ako klikne 2 puta na kolonu da izbaci prozor sa knjigama od tih nastavnika
-	 */	
 	private void prikazSviNastavnici(JInternalFrame sviNastavnici) {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 43, 450, 259);
@@ -1082,65 +1226,63 @@ public class StudentGUI {
 		tableNastavnici = new JTable(){
 			private static final long serialVersionUID = 1L;
 			public boolean isCellEditable(int row, int column){
-				return false; //onemogucujemo editovanje nakon dva klika
+			     return false; 
 			}
-		};
+		};;
 		scrollPane.setViewportView(tableNastavnici);
 		tableNastavnici.setModel(new DefaultTableModel(
 				new Object[][] {
 				},
 				new String[] {
-						"Prezime i ime", "Zvanje"
+						"Šifra", "Prezime i ime", "Zvanje"
 				}
 				));
-		tableNastavnici.getColumnModel().getColumn(0).setPreferredWidth(150);
-		tableNastavnici.getColumnModel().getColumn(1).setPreferredWidth(100);
-		//tableNastavnici.getColumnModel().getColumn(2).setPreferredWidth(232);
 
+		tableNastavnici.getColumnModel().getColumn(0).setPreferredWidth(20);
+		tableNastavnici.getColumnModel().getColumn(1).setPreferredWidth(200);
+		tableNastavnici.getColumnModel().getColumn(2).setPreferredWidth(100);
+		/*
+		 * Praznimo sve elemente tabele 
+		 */
 		DefaultTableModel model = (DefaultTableModel) tableNastavnici.getModel();
 		model.setRowCount(0);
 
 		for (MNastavnik nastavnik : GetDbTables.getTableNastavnici()) {
-			model.addRow(new Object[]{nastavnik.getPrezNastavnik() + " " + nastavnik.getImeNastavnik(), nastavnik.getZvanje()}); //upisujemo u tabelu
+			model.addRow(new Object[]{nastavnik.getSifNastavnik(), nastavnik.getPrezNastavnik() + " " + nastavnik.getImeNastavnik(), nastavnik.getZvanje()}); //upisujemo u tabelu
 		}
 		
-
 		txtFilterNastavnici = new JTextField();
 		txtFilterNastavnici.setBounds(12, 12, 250, 19);
 		sviNastavnici.getContentPane().add(txtFilterNastavnici);
 		txtFilterNastavnici.setColumns(10);
 		
-		JRadioButton rdbtnPrezimeIme = new JRadioButton("Prezime i ime");
-		rdbtnPrezimeIme.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				filterTableByColumn(tableNastavnici, 0, txtFilterNastavnici);
-			}
-		});
-		rdbtnPrezimeIme.setBounds(270, 12, 119, 23);
-		sviNastavnici.getContentPane().add(rdbtnPrezimeIme);
-		rdbtnPrezimeIme.setSelected(true);
-		if(rdbtnPrezimeIme.isSelected()){
-			filterTableByColumn(tableNastavnici, 0, txtFilterNastavnici);
-		}
-		
-		JRadioButton rdbtnZvanje = new JRadioButton("Zvanje");
-		rdbtnZvanje.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				filterTableByColumn(tableNastavnici, 1, txtFilterNastavnici);
-			}
-		});
-		rdbtnZvanje.setBounds(393, 12, 73, 23);
-		sviNastavnici.getContentPane().add(rdbtnZvanje);
-		
-		ButtonGroup group = new ButtonGroup();
-		group.add(rdbtnPrezimeIme);
-		group.add(rdbtnZvanje);
-
+		filterTableByColumn(tableNastavnici, 1, txtFilterNastavnici);
+		/*
+		 * postavljamo mouseListener koji odsluskuje da li se klikce na neki red u tabeli.
+		 * Ideja je da kllikom na odredjeni red, da se otvori prozor koji ce editovati odabranog korisnika
+		 * tj da bibliotekar moze resetovati negativne bodove.
+		 * pristup ovoj opciji ima samo bibliotekar, pa treba o tome voditi racuna
+		 */
+	
+			tableNastavnici.addMouseListener(new java.awt.event.MouseAdapter() {
+				@Override
+				public void mouseClicked(java.awt.event.MouseEvent evt) {
+					int row = tableNastavnici.rowAtPoint(evt.getPoint());
+					int col = tableNastavnici.columnAtPoint(evt.getPoint());
+					if (row >= 0 && col >= 0 && evt.getClickCount() == 2) {
+						/*
+						 * ako dodje do duplog klika, iz odabranog reda procitaj vrijednost za sifStdenta, i prosljedi to u funkciju resetStudentBodovi
+						 * koja je ustvari novi prozor za resetovanje negativnih bodova 
+						 */
+						String nastavnik= (String) tableNastavnici.getModel().getValueAt(tableNastavnici.convertRowIndexToModel(row), 1);
+						sviPredmetiZaNastavnika(nastavnik);
+						sviNastavnici.dispose();
+					}
+				}
+			});
+	
 	}
-
-	/*
-	 * zavrseno filtriranje po kolonama samo, treba staviti da ako klikne 2 puta na kolonu da izbaci prozor sa knjigama tih studenata
-	 */	
+	
 	private void prikazSviStudenti(JInternalFrame sviStudenti) {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 43, 400, 273);
@@ -1186,9 +1328,6 @@ public class StudentGUI {
 		filterTable(tableStudenti, txtFilterStudent);
 	}
 	
-	/*
-	 * zavrseno filtriranje po kolonama samo, treba staviti da ako klikne 2 puta na kolonu da izbaci prozor sa knjigama za taj predmet
-	 */	
 	private void prikazSviPredmeti(JInternalFrame sviPredmeti) {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 43, 648, 389);
@@ -1275,6 +1414,94 @@ public class StudentGUI {
 		group.add(rdbtnProfesor);
 	}
 
+	private void prikazSviPredmetiZaNastavnika(JInternalFrame sviPredmeti, String prezIme) {
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 43, 648, 389);
+		sviPredmeti.getContentPane().add(scrollPane);
+
+		tablePredmeti = new JTable(){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int row, int column){
+				return false; //onemogucujemo editovanje nakon dva klika
+			}
+		};
+		scrollPane.setViewportView(tablePredmeti);
+		tablePredmeti.setModel(new DefaultTableModel(
+				new Object[][] {
+				},
+				new String[] {
+						"Predmet", "Kratica", "Predaje", "Semestar"
+				}
+				));
+		tablePredmeti.getColumnModel().getColumn(0).setPreferredWidth(267);
+		tablePredmeti.getColumnModel().getColumn(1).setPreferredWidth(86);
+		tablePredmeti.getColumnModel().getColumn(2).setPreferredWidth(190);
+
+		DefaultTableModel model = (DefaultTableModel) tablePredmeti.getModel();
+		model.setRowCount(0);
+		
+		for (MPredmet predmet : GetDbTables.getTablePredmetiOdNastavnika(prezIme)) {
+			String semestarStr = new String();
+			for (MSemestar semestar : GetDbTables.getTableSemestr()) {
+				if(predmet.getSifSemestar() == semestar.getSifSemestar()){
+					semestarStr = semestar.getSemestar();
+				}
+			}
+
+			model.addRow(new Object[]{predmet.getNazPredmet(), predmet.getKratPredmet(), prezIme, semestarStr}); //upisujemo u tabelu
+		}
+		
+		txtFilterPredmet = new JTextField();
+		txtFilterPredmet.setBounds(12, 12, 385, 19);
+		sviPredmeti.getContentPane().add(txtFilterPredmet);
+		txtFilterPredmet.setColumns(10);
+		
+		JRadioButton rdbtnPredmet = new JRadioButton("Predmet");
+		rdbtnPredmet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				filterTableByColumn(tablePredmeti, 0, txtFilterPredmet);
+			}
+		});
+		rdbtnPredmet.setSelected(true);
+		rdbtnPredmet.setBounds(405, 10, 85, 23);
+		sviPredmeti.getContentPane().add(rdbtnPredmet);
+		if (rdbtnPredmet.isSelected()) {
+			filterTableByColumn(tablePredmeti, 0, txtFilterPredmet);
+		}
+		
+		
+		JRadioButton rdbtnKratica = new JRadioButton("Kratica");
+		rdbtnKratica.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				filterTableByColumn(tablePredmeti, 1, txtFilterPredmet);
+			}
+		});
+		rdbtnKratica.setBounds(494, 10, 80, 23);
+		sviPredmeti.getContentPane().add(rdbtnKratica);
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(rdbtnPredmet);
+		group.add(rdbtnKratica);
+		
+		
+		tablePredmeti.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				int row = tablePredmeti.rowAtPoint(evt.getPoint());
+				int col = tablePredmeti.columnAtPoint(evt.getPoint());
+				System.out.println( "test " );
+				
+				System.out.println( row + " " + col);
+				if (row >= 0 && col >= 0 && evt.getClickCount() == 2) {
+
+					String predmet = (String) tablePredmeti.getModel().getValueAt(tablePredmeti.convertRowIndexToModel(row), 0);
+					sveKnjigeZaPredmet(predmet);
+					sviPredmeti.dispose();
+				}
+			}
+		});
+		
+	}
 	
 	/*
 	 * filtriranje tabela
