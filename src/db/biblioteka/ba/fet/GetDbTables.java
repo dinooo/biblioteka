@@ -46,6 +46,12 @@ public class GetDbTables {
 		return TKnjiga.listaKnjiga;
 	}
 	
+	public static ArrayList<MKnjiga> getTableKnjigeOdAutora(String autor) {
+		TKnjiga.listaKnjiga.clear();
+		DBKnjiga.getKnjigaOdAuotra(autor);
+		return TKnjiga.listaKnjiga;
+	}
+	
 	public static MKnjiga getKnjigaBySifra(int sifra){
 		TKnjiga.listaKnjiga.clear();
 		DBKnjiga.getKnjigaBySifra(sifra);

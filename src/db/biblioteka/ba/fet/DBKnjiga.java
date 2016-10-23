@@ -74,7 +74,7 @@ public class DBKnjiga {
 	
 	public static void getSlobodneKnjigeBySifKoisnik(int sifKorisnik, int tipKorisnik){
 		String SQL2 = "SELECT * FROM knjiga WHERE sifKnjiga IN (SELECT sifKnjiga FROM primjerak WHERE rezervisan = 0 AND "
-				+ "sifPrimjerak IN (SELECT sifPrimjerak FROM rezervacija WHERE sifKorisnik = ? AND nastStud = ? GROUP"
+				+ "sifPrimjerak IN (SELECT sifPrimjerak FROM rezervacija WHERE sifKorisnik = ? AND nastStud = ? "
 				+ "GROUP BY sifKnjiga))";	
 		Connection dbConnection = null;
 		PreparedStatement preparedStatement = null;
@@ -238,6 +238,41 @@ public class DBKnjiga {
 			ResultSet rs = preparedStatement.executeQuery();
 			TKnjiga.getListaKnjiga(rs);
 			} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (dbConnection != null) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static void getKnjigaOdAuotra(String autor){
+		String[] niz = autor.split(" ");
+		String SQL2 = "SELECT * FROM knjiga WHERE sifKnjiga IN (SELECT sifKnjiga FROM KnjigaAutorRBr WHERE sifAutor IN "
+				+ "(SELECT sifAutor FROM autor WHERE imeAutor = ? AND prezAutor = ? "
+				+ "GROUP BY sifKnjiga))";	
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			dbConnection = DBUtil.getConnection(DBType.MYSQL);
+			preparedStatement = dbConnection.prepareStatement(SQL2);
+			preparedStatement.setString(1, niz[1]);
+			preparedStatement.setString(2, niz[0]);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			TKnjiga.getListaKnjiga(rs);
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} finally {
 			if (preparedStatement != null) {
