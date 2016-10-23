@@ -135,14 +135,6 @@ public class StudentGUI {
 		JMenu mnBiblioteka = new JMenu("Biblioteka");
 		menuBar.add(mnBiblioteka);
 
-		JMenuItem mntmIznajmiKnjigu = new JMenuItem("Iznajmi knjigu");
-		mntmIznajmiKnjigu.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				zaduziKnjigu();
-			}
-		});
-		mnBiblioteka.add(mntmIznajmiKnjigu);
-
 		JMenuItem mntmPregledajSveKnjige = new JMenuItem("Knjige");
 		mntmPregledajSveKnjige.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -199,7 +191,7 @@ public class StudentGUI {
 		 * test
 		 */
 		
-		sviPredmeti();
+		sviStudenti();
 	}
 	
 	private void mojProfil(){
@@ -427,7 +419,7 @@ public class StudentGUI {
 		}	
 	}
 	
-	private void zaduziKnjigu() {
+	private static void zaduziKnjigu(String origNaslov) {
 		JInternalFrame zaduziKnjigu = new JInternalFrame("Zaduži knjigu", true, true, true);
 		zaduziKnjigu.setBounds(12, 12, 455, 168);
 		zaduziKnjigu.setVisible(true);
@@ -455,24 +447,13 @@ public class StudentGUI {
 			zaduziKnjigu.getContentPane().add(lblPoruka);
 		} else {
 
-			JLabel lblOdaberiKnjigu = new JLabel("Odaberi knjigu:");
+			JLabel lblOdaberiKnjigu = new JLabel("Knjiga:");
 			lblOdaberiKnjigu.setBounds(36, 12, 109, 15);
 			zaduziKnjigu.getContentPane().add(lblOdaberiKnjigu);
 
-			JComboBox<String> cmbBoxKnjiga = new JComboBox<String>();
-			cmbBoxKnjiga.setBounds(163, 7, 268, 24);
-			zaduziKnjigu.getContentPane().add(cmbBoxKnjiga);
-			
-			/*
-			 * Treba da prikaze sve knjige osim onih koje je trenutni korisnik vec iznajmio ili rezervisao. 
-			 * Dohvatit cemo sve posudbe za aktivnog studenta iz tabele PosudbaPrimjerakStudent, i iz te tabele
-			 * procitati sifPrimjeraka, a pomocu njih cemo znati koje su knjige u pitanju koje su posudjene
-			 */
-			
-			//upisujemo knjige u comboBox slobodne knjige
-			for (MKnjiga knjiga : GetDbTables.getTableSlobodneKnjige()) {
-				cmbBoxKnjiga.addItem(knjiga.getOrigNaslov());
-			}
+			JLabel lblodabranaKnjiga = new JLabel(origNaslov);
+			lblodabranaKnjiga.setBounds(163, 12, 268, 15);
+			zaduziKnjigu.getContentPane().add(lblodabranaKnjiga);
 			
 			JLabel lblDatumRezervacije = new JLabel("Datum rezervacije:");
 			lblDatumRezervacije.setBounds(12, 39, 133, 15);
@@ -517,8 +498,7 @@ public class StudentGUI {
 					/*
 					 * Dohvacamo odabranu knjigu za rezervaciju iz comboBoxa i pronalazimo je u bazi
 					 */
-					String knjigaStr = (String)cmbBoxKnjiga.getSelectedItem(); 
-					MKnjiga knjiga = GetDbTables.getKnjigaByOrigNaslov(knjigaStr);
+					MKnjiga knjiga = GetDbTables.getKnjigaByOrigNaslov(origNaslov);
 
 					/*
 					 * Posto knjige ima na stanju, tada je sifKnjige upisano (nije -1), i onda cemo pronaci 
@@ -645,7 +625,7 @@ public class StudentGUI {
 
 	private void sviAutori() {
 		JInternalFrame sviAutori = new JInternalFrame("Autori", true, true, true);
-		sviAutori.setBounds(12, 12, 468, 357);
+		sviAutori.setBounds(12, 12, 282, 357);
 		sviAutori.setVisible(true);
 		frame.getContentPane().add(sviAutori);
 		sviAutori.getContentPane().setLayout(null);
@@ -665,7 +645,7 @@ public class StudentGUI {
 
 	private void sviNastavnici() {
 		JInternalFrame sviNastavnici = new JInternalFrame("Nastavnici", true, true, true);
-		sviNastavnici.setBounds(12, 12, 682, 346);
+		sviNastavnici.setBounds(12, 12, 484, 346);
 		sviNastavnici.setVisible(true);
 		frame.getContentPane().add(sviNastavnici);
 		sviNastavnici.getContentPane().setLayout(null);
@@ -675,7 +655,7 @@ public class StudentGUI {
 
 	private void sviStudenti() {
 		JInternalFrame sviStudenti = new JInternalFrame("Studenti", true, true, true);
-		sviStudenti.setBounds(12, 12, 601, 360);
+		sviStudenti.setBounds(12, 12, 430, 361);
 		sviStudenti.setVisible(true);
 		frame.getContentPane().add(sviStudenti);
 		sviStudenti.getContentPane().setLayout(null);
@@ -817,6 +797,29 @@ public class StudentGUI {
 		group.add(rdbtnIzdavac);
 		group.add(rdbtnGodinaIzdanja);
 		
+		/*
+		 * ako se duplo klikne na knjigu, da se otvori prozor za posudjivanje te knjige
+		 */
+		tableKnjige.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				int row = tableKnjige.rowAtPoint(evt.getPoint());
+				int col = tableKnjige.columnAtPoint(evt.getPoint());
+				System.out.println( "test " );
+				
+				System.out.println( row + " " + col);
+				if (row >= 0 && col >= 0 && evt.getClickCount() == 2) {
+					/*
+					 * ako dodje do duplog klika, iz odabranog reda procitaj vrijednost za sifStdenta, i prosljedi to u funkciju resetStudentBodovi
+					 * koja je ustvari novi prozor za resetovanje negativnih bodova 
+					 */
+					String origNaslov = (String) tableKnjige.getModel().getValueAt(tableKnjige.convertRowIndexToModel(row), 0);
+					zaduziKnjigu(origNaslov);			
+					sveKnjige.dispose();
+				}
+			}
+		});
+		
 	}
 
 	/*
@@ -824,7 +827,7 @@ public class StudentGUI {
 	 */
 	public static void prikazSviAutori(JInternalFrame sviAutori) {
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 43, 434, 270);
+		scrollPane.setBounds(12, 43, 250, 270);
 		sviAutori.getContentPane().add(scrollPane);
 
 		tableAutori = new JTable(){
@@ -838,22 +841,21 @@ public class StudentGUI {
 				new Object[][] {
 				},
 				new String[] {
-						"Prezime", "Ime"
+						"Prezime i ime",
 				}
 				));
 		tableAutori.getColumnModel().getColumn(0).setPreferredWidth(241);
-		tableAutori.getColumnModel().getColumn(1).setPreferredWidth(246);
 
 		DefaultTableModel model = (DefaultTableModel) tableAutori.getModel();
 		model.setRowCount(0);
 
 		for (MAutor autor : GetDbTables.getTableAutori()) {
-			model.addRow(new Object[]{autor.getPrezAutor(), autor.getImeAutor()});
+			model.addRow(new Object[]{autor.getPrezAutor() + " " + autor.getImeAutor()});
 		}
 		
 		
 		txtFilterTableAutori = new JTextField();
-		txtFilterTableAutori.setBounds(12, 12, 216, 19);
+		txtFilterTableAutori.setBounds(12, 12, 250, 19);
 		sviAutori.getContentPane().add(txtFilterTableAutori);
 		txtFilterTableAutori.setColumns(10);
 		
@@ -907,7 +909,7 @@ public class StudentGUI {
 	 */	
 	private void prikazSviNastavnici(JInternalFrame sviNastavnici) {
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 43, 648, 259);
+		scrollPane.setBounds(12, 43, 450, 259);
 		sviNastavnici.getContentPane().add(scrollPane);
 
 		tableNastavnici = new JTable(){
@@ -921,23 +923,23 @@ public class StudentGUI {
 				new Object[][] {
 				},
 				new String[] {
-						"Prezime", "Ime", "Zvanje"
+						"Prezime i ime", "Zvanje"
 				}
 				));
-		tableNastavnici.getColumnModel().getColumn(0).setPreferredWidth(185);
-		tableNastavnici.getColumnModel().getColumn(1).setPreferredWidth(201);
-		tableNastavnici.getColumnModel().getColumn(2).setPreferredWidth(232);
+		tableNastavnici.getColumnModel().getColumn(0).setPreferredWidth(150);
+		tableNastavnici.getColumnModel().getColumn(1).setPreferredWidth(100);
+		//tableNastavnici.getColumnModel().getColumn(2).setPreferredWidth(232);
 
 		DefaultTableModel model = (DefaultTableModel) tableNastavnici.getModel();
 		model.setRowCount(0);
 
 		for (MNastavnik nastavnik : GetDbTables.getTableNastavnici()) {
-			model.addRow(new Object[]{nastavnik.getPrezNastavnik(), nastavnik.getImeNastavnik(), nastavnik.getZvanje()}); //upisujemo u tabelu
+			model.addRow(new Object[]{nastavnik.getPrezNastavnik() + " " + nastavnik.getImeNastavnik(), nastavnik.getZvanje()}); //upisujemo u tabelu
 		}
 		
 
 		txtFilterNastavnici = new JTextField();
-		txtFilterNastavnici.setBounds(12, 12, 448, 19);
+		txtFilterNastavnici.setBounds(12, 12, 250, 19);
 		sviNastavnici.getContentPane().add(txtFilterNastavnici);
 		txtFilterNastavnici.setColumns(10);
 		
@@ -947,7 +949,7 @@ public class StudentGUI {
 				filterTableByColumn(tableNastavnici, 0, txtFilterNastavnici);
 			}
 		});
-		rdbtnPrezimeIme.setBounds(468, 10, 119, 23);
+		rdbtnPrezimeIme.setBounds(270, 12, 119, 23);
 		sviNastavnici.getContentPane().add(rdbtnPrezimeIme);
 		rdbtnPrezimeIme.setSelected(true);
 		if(rdbtnPrezimeIme.isSelected()){
@@ -960,7 +962,7 @@ public class StudentGUI {
 				filterTableByColumn(tableNastavnici, 2, txtFilterNastavnici);
 			}
 		});
-		rdbtnZvanje.setBounds(591, 10, 73, 23);
+		rdbtnZvanje.setBounds(393, 12, 73, 23);
 		sviNastavnici.getContentPane().add(rdbtnZvanje);
 		
 		ButtonGroup group = new ButtonGroup();
@@ -974,7 +976,7 @@ public class StudentGUI {
 	 */	
 	private void prikazSviStudenti(JInternalFrame sviStudenti) {
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 43, 567, 273);
+		scrollPane.setBounds(12, 43, 400, 273);
 		sviStudenti.getContentPane().add(scrollPane);
 
 		tableStudenti = new JTable(){
@@ -988,13 +990,12 @@ public class StudentGUI {
 				new Object[][] {
 				},
 				new String[] {
-						"Sifra", "Prezime", "Ime", "Semestar"
+						"Sifra", "Prezime i Ime", "Semestar"
 				}
 				));
 		tableStudenti.getColumnModel().getColumn(0).setPreferredWidth(20);
 		tableStudenti.getColumnModel().getColumn(1).setPreferredWidth(200);
-		tableStudenti.getColumnModel().getColumn(2).setPreferredWidth(200);
-		tableStudenti.getColumnModel().getColumn(3).setPreferredWidth(50);
+		tableStudenti.getColumnModel().getColumn(2).setPreferredWidth(50);
 
 		DefaultTableModel model = (DefaultTableModel) tableStudenti.getModel();
 		model.setRowCount(0);
@@ -1007,11 +1008,11 @@ public class StudentGUI {
 					semestarStr = semestar.getSemestar();
 				}
 			}
-			model.addRow(new Object[]{student.getSifStudent(), student.getPrezStudent(), student.getImeStudent(), semestarStr}); //upisujemo u tabelu
+			model.addRow(new Object[]{student.getSifStudent(), student.getPrezStudent() + " " + student.getImeStudent(), semestarStr}); //upisujemo u tabelu
 		}
 		
 		txtFilterStudent = new JTextField();
-		txtFilterStudent.setBounds(12, 12, 567, 19);
+		txtFilterStudent.setBounds(12, 12, 400, 19);
 		sviStudenti.getContentPane().add(txtFilterStudent);
 		txtFilterStudent.setColumns(10);
 		
