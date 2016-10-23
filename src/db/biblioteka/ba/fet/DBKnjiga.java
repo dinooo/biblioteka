@@ -291,4 +291,38 @@ public class DBKnjiga {
 			}
 		}
 	}
+	
+	public static void getKnjigaZaPredmet(String predmet){
+		String SQL2 = "SELECT * FROM knjiga WHERE sifKnjiga IN (SELECT sifKnjiga FROM KnjigaPredmetObaveznost WHERE sifPredmet IN "
+				+ "(SELECT sifPredmet FROM predmet WHERE nazPredmet = ?))";	
+					
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			dbConnection = DBUtil.getConnection(DBType.MYSQL);
+			preparedStatement = dbConnection.prepareStatement(SQL2);
+			preparedStatement.setString(1, predmet);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			TKnjiga.getListaKnjiga(rs);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (dbConnection != null) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 }

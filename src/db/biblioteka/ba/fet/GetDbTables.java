@@ -2,10 +2,12 @@ package db.biblioteka.ba.fet;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import modeli.biblioteka.ba.fet.MAutor;
 import modeli.biblioteka.ba.fet.MIzdavac;
 import modeli.biblioteka.ba.fet.MKnjiga;
+import modeli.biblioteka.ba.fet.MKnjigaPredmetObaveznost;
 import modeli.biblioteka.ba.fet.MNastavnik;
 import modeli.biblioteka.ba.fet.MObaveznost;
 import modeli.biblioteka.ba.fet.MPredmet;
@@ -21,6 +23,7 @@ import modeli.biblioteka.ba.fet.MVrstaKnjige;
 import tabele.biblioteka.ba.fet.TAutor;
 import tabele.biblioteka.ba.fet.TIzdavac;
 import tabele.biblioteka.ba.fet.TKnjiga;
+import tabele.biblioteka.ba.fet.TKnjigaPredmetObaveznost;
 import tabele.biblioteka.ba.fet.TNastavnik;
 import tabele.biblioteka.ba.fet.TObaveznost;
 import tabele.biblioteka.ba.fet.TPredmet;
@@ -50,6 +53,29 @@ public class GetDbTables {
 		TKnjiga.listaKnjiga.clear();
 		DBKnjiga.getKnjigaOdAuotra(autor);
 		return TKnjiga.listaKnjiga;
+	}
+	
+	public static ArrayList<MKnjiga> getTableKnjigeZaPredmet(String predmet) {
+		TKnjiga.listaKnjiga.clear();
+		DBKnjiga.getKnjigaZaPredmet(predmet);
+		ArrayList<MKnjigaPredmetObaveznost> kpoList = getKPOzaPredmet(predmet);
+		ArrayList<MKnjiga> knjigaList = new ArrayList<>();
+		for (MKnjiga mKnjiga : TKnjiga.listaKnjiga) {
+			for (MKnjigaPredmetObaveznost kpo : getKPOzaPredmet(predmet)) {
+				if(kpo.getSifKnjiga() == mKnjiga.getSifKnjiga()){
+					knjigaList.add(mKnjiga);
+				}
+			}
+		}
+		return knjigaList;
+		
+		
+	}
+	
+	private static ArrayList<MKnjigaPredmetObaveznost> getKPOzaPredmet(String predmet){
+		TKnjigaPredmetObaveznost.listaKnjigaPredmetObaveznost.clear();
+		DBKnjigaPredmetObaveznost.getKnjiPredObavZaPredmet(predmet);
+		return TKnjigaPredmetObaveznost.listaKnjigaPredmetObaveznost;
 	}
 	
 	public static MKnjiga getKnjigaBySifra(int sifra){
@@ -199,7 +225,7 @@ public class GetDbTables {
 	}
 	
 	public static ArrayList<MAutor> getTableAutori(){
-		TAutor.listaAutora.clear();; //prazimo vektor jer ga zelimo napuniti najnovijim podacima
+		TAutor.listaAutora.clear();
 		DBAutor.getAutor();
 		return TAutor.listaAutora;
 	}
@@ -226,6 +252,12 @@ public class GetDbTables {
 		TPredmet.listaPredmet.clear();
 		DBPredmet.getPredmet();
 		return TPredmet.listaPredmet;	
+	}
+	
+	public static ArrayList<MPredmet> getTablePredmetiOdNastavnika(String nastavnik) {
+		TPredmet.listaPredmet.clear();
+		DBPredmet.getPredmetiOdNastavnika(nastavnik);
+		return TPredmet.listaPredmet;
 	}
 	
 	public static int getSifPredmetByNaziv(String nazPredmet){

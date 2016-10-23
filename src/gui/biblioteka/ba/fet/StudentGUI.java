@@ -1189,7 +1189,7 @@ public class StudentGUI {
 	/*
 	 * zavrseno filtriranje po kolonama samo, treba staviti da ako klikne 2 puta na kolonu da izbaci prozor sa knjigama za taj predmet
 	 */	
-	public static void prikazSviPredmeti(JInternalFrame sviPredmeti) {
+	private void prikazSviPredmeti(JInternalFrame sviPredmeti) {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 43, 648, 389);
 		sviPredmeti.getContentPane().add(scrollPane);

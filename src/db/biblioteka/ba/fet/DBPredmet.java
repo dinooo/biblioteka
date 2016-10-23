@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import modeli.biblioteka.ba.fet.MPredmet;
+import tabele.biblioteka.ba.fet.TKnjiga;
 import tabele.biblioteka.ba.fet.TPredmet;
 
 public class DBPredmet {
@@ -25,6 +26,41 @@ public class DBPredmet {
 			DBUtil.processException(e);
 		}
 	}
+	public static void getPredmetiOdNastavnika(String prezIme){
+		
+		String[] niz = prezIme.split(" ");
+		String SQL2 = "SELECT * FROM predmet WHERE sifNastavnik IN (SELECT sifNastavnik FROM nastavnik WHERE prezNastavnik = ? AND imeNastavnik = ?)";	
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			dbConnection = DBUtil.getConnection(DBType.MYSQL);
+			preparedStatement = dbConnection.prepareStatement(SQL2);
+			preparedStatement.setString(1, niz[0]);
+			preparedStatement.setString(2, niz[1]);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			TPredmet.getListaPredmet(rs);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (dbConnection != null) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+	}
+	
 	
 	public static boolean insertPredmet(MPredmet predmet){
 		String sqlInsert = "INSERT INTO predmet (nazPredmet, kratPredmet, sifSemestar, sifNastavnik) " + 

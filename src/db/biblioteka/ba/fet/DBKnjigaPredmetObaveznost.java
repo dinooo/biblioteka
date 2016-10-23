@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import modeli.biblioteka.ba.fet.MKnjigaPredmetObaveznost;
+import tabele.biblioteka.ba.fet.TKnjiga;
 import tabele.biblioteka.ba.fet.TKnjigaPredmetObaveznost;
 
 public class DBKnjigaPredmetObaveznost {
@@ -24,6 +25,39 @@ public class DBKnjigaPredmetObaveznost {
 			DBUtil.processException(e);
 		}
 	}
+	
+	public static void getKnjiPredObavZaPredmet(String predmet){
+		String SQL2 = "SELECT * FROM KnjigaPredmetObaveznost WHERE sifPredmet IN (SELECT sifPredmet FROM predmet WHERE nazPredmet = ?)";	
+					
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			dbConnection = DBUtil.getConnection(DBType.MYSQL);
+			preparedStatement = dbConnection.prepareStatement(SQL2);
+			preparedStatement.setString(1, predmet);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			TKnjigaPredmetObaveznost.getListaKnjigaPredmetObaveznost(rs);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (dbConnection != null) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	public static boolean insertKnjiPredObav(MKnjigaPredmetObaveznost pom){
 		String sqlInsert = "INSERT INTO KnjigaPredmetObaveznost (sifVaznObav, sifKnjiga, sifPredmet) " + "VALUES (?, ?, ?)";
 		ResultSet keys = null;
