@@ -282,9 +282,14 @@ public class NastavnikGUI {
 	
 		MNastavnik nastavnik = GetDbTables.getNastavnikBySifra(LoginGUI.sifNastavnikActive);
 		
+		JMenu mnUpravljanjeBibliotekom = new JMenu("Upravljanje bibliotekom");
+		if(nastavnik.getBibliotekar() == 1) {
+			menuBar.add(mnUpravljanjeBibliotekom);	
+		}
+		
 		JMenu mnBibliotekaBibliotekar = new JMenu("Biblioteka");
 		if(nastavnik.getBibliotekar() == 1) {
-			menuBar.add(mnBibliotekaBibliotekar);	
+			mnUpravljanjeBibliotekom.add(mnBibliotekaBibliotekar);	
 		}
 
 		JMenuItem mntmRezervacije = new JMenuItem("Rezervacije");
@@ -340,11 +345,8 @@ public class NastavnikGUI {
 		 */
 		JMenu mnKorisnici = new JMenu("Korisnici");
 		if(nastavnik.getBibliotekar() == 1) {
-			menuBar.add(mnKorisnici);
+			mnUpravljanjeBibliotekom.add(mnKorisnici);
 		}
-
-		JMenu mnNoviKorisnik = new JMenu("Novi korisnik");
-		mnKorisnici.add(mnNoviKorisnik);
 
 		JMenuItem mntmNastavnik = new JMenuItem("Nastavnik");
 		mntmNastavnik.addActionListener(new ActionListener() {
@@ -352,7 +354,7 @@ public class NastavnikGUI {
 				noviNastavnik();
 			}
 		});
-		mnNoviKorisnik.add(mntmNastavnik);
+		mnKorisnici.add(mntmNastavnik);
 
 		JMenuItem mntmStudent = new JMenuItem("Student");
 		mntmStudent.addActionListener(new ActionListener() {
@@ -360,19 +362,15 @@ public class NastavnikGUI {
 				noviStudent();
 			}
 		});
-		mnNoviKorisnik.add(mntmStudent);
+		mnKorisnici.add(mntmStudent);
 
 		/*
 		 * Meni Knjiga
 		 */
 		JMenu mnKnjiga = new JMenu("Knjiga");
 		if(nastavnik.getBibliotekar() == 1) {
-			menuBar.add(mnKnjiga);
+			mnUpravljanjeBibliotekom.add(mnKnjiga);
 		}
-
-
-		JMenu mnKnjige = new JMenu("Knjige");
-		mnKnjiga.add(mnKnjige);
 
 		JMenuItem mntmDodajKnjigu = new JMenuItem("Dodaj knjigu");
 		mntmDodajKnjigu.addActionListener(new ActionListener() {
@@ -380,39 +378,24 @@ public class NastavnikGUI {
 				novaKnjiga();
 			}
 		});
-		mnKnjige.add(mntmDodajKnjigu);
-		/*
-		JMenuItem mntmIzbriiKnjigu = new JMenuItem("Izbriši knjigu");
-		mnKnjige.add(mntmIzbriiKnjigu);
-		*/
-		JMenu mnAutori = new JMenu("Autori");
-		mnKnjiga.add(mnAutori);
-
+		mnKnjiga.add(mntmDodajKnjigu);
+		
 		JMenuItem mntmDodajAutora = new JMenuItem("Dodaj autora");
 		mntmDodajAutora.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				noviAutor();
 			}
 		});
-		mnAutori.add(mntmDodajAutora);
-		/*
-		JMenuItem mntmIzbriiAutora = new JMenuItem("Izbriši autora");
-		mnAutori.add(mntmIzbriiAutora);
-		*/
-		JMenu mnIzdava = new JMenu("Izdavač");
-		mnKnjiga.add(mnIzdava);
-
+		mnKnjiga.add(mntmDodajAutora);
+		
 		JMenuItem mntmDodajIzdavaa = new JMenuItem("Dodaj izdavača");
 		mntmDodajIzdavaa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				noviIzdavac();
 			}
 		});
-		mnIzdava.add(mntmDodajIzdavaa);
+		mnKnjiga.add(mntmDodajIzdavaa);
 		/*
-		JMenuItem mntmIzbriiIzdava = new JMenuItem("Izbriši izdavča");
-		mnIzdava.add(mntmIzbriiIzdava);
-		 */
 		JMenu mnTipKnjige = new JMenu("Tip knjige");
 		mnKnjiga.add(mnTipKnjige);
 
@@ -423,21 +406,14 @@ public class NastavnikGUI {
 			}
 		});
 		mnTipKnjige.add(mntmDodajTipKnjige);
-		/*
-		JMenuItem mntmIzbriiTipKnjige = new JMenuItem("Izbriši tip knjige");
-		mnTipKnjige.add(mntmIzbriiTipKnjige);
 		*/
 		/*
 		 * Meni Predmet
 		 */
 		JMenu mnPredmeti = new JMenu("Predmeti");
 		if(nastavnik.getBibliotekar() == 1) {
-			menuBar.add(mnPredmeti);
+			mnUpravljanjeBibliotekom.add(mnPredmeti);
 		}
-
-
-		JMenu mnPredmeti_1 = new JMenu("Predmeti");
-		mnPredmeti.add(mnPredmeti_1);
 
 		JMenuItem mntmDodajPredmet = new JMenuItem("Dodaj predmet");
 		mntmDodajPredmet.addActionListener(new ActionListener() {
@@ -445,11 +421,8 @@ public class NastavnikGUI {
 				noviPredmet();
 			}
 		});
-		mnPredmeti_1.add(mntmDodajPredmet);
+		mnPredmeti.add(mntmDodajPredmet);
 		/*
-		JMenuItem mntmIzbriiPredmet = new JMenuItem("Izbriši predmet");
-		mnPredmeti_1.add(mntmIzbriiPredmet);
-		*/
 		JMenu mnSemestar = new JMenu("Semestar");
 		mnPredmeti.add(mnSemestar);
 
@@ -460,13 +433,13 @@ public class NastavnikGUI {
 			}
 		});
 		mnSemestar.add(mntmDodajSemestar);
-		
+		*/
 		/*
-		JMenuItem mntmIzbriiSemestar = new JMenuItem("Izbriši semestar");
-		mnSemestar.add(mntmIzbriiSemestar);
+		 * 
 		 */
+		/*
 		JMenu mnOstalo = new JMenu("Ostalo");
-		menuBar.add(mnOstalo);
+		mnUpravljanjeBibliotekom.add(mnOstalo);
 
 		JMenu mnTabelaVaznostiPredmeta = new JMenu("Tabela važnosti predmeta");
 		mnOstalo.add(mnTabelaVaznostiPredmeta);
@@ -478,10 +451,7 @@ public class NastavnikGUI {
 			}
 		});
 		mnTabelaVaznostiPredmeta.add(mntmDodajVaznost);
-		/*
-		JMenuItem mntmIzbriiVanost = new JMenuItem("Izbriši važnost");
-		mnTabelaVaznostiPredmeta.add(mntmIzbriiVanost);
-		 */
+	
 		JMenu mnTabelaObaveznostiPredmeta = new JMenu("Tabela obaveznosti predmeta");
 		mnOstalo.add(mnTabelaObaveznostiPredmeta);
 
@@ -493,10 +463,6 @@ public class NastavnikGUI {
 		});
 		mnTabelaObaveznostiPredmeta.add(mntmDodajObaveznost);
 		
-		/*
-		JMenuItem mntmIzbrisiObaveznost = new JMenuItem("Izbrisi obaveznost");
-		mnTabelaObaveznostiPredmeta.add(mntmIzbrisiObaveznost);
-		 */
 		JMenu mnTabelaRednihBrojeva = new JMenu("Tabela rednih brojeva autora");
 		mnOstalo.add(mnTabelaRednihBrojeva);
 
@@ -508,7 +474,7 @@ public class NastavnikGUI {
 		});
 		mnTabelaRednihBrojeva.add(mntmDodajRedniBroj);
 		
-		
+		*/
 	}
 
 	private void mojProfil(){
