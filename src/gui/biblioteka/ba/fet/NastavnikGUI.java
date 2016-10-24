@@ -30,31 +30,23 @@ import org.jdatepicker.impl.UtilDateModel;
 import org.jdesktop.swingx.JXDatePicker;
 
 import db.biblioteka.ba.fet.DBAutor;
-import db.biblioteka.ba.fet.DBAutorRBr;
 import db.biblioteka.ba.fet.DBIzdavac;
 import db.biblioteka.ba.fet.DBKnjiga;
 import db.biblioteka.ba.fet.DBKnjigaAutorRBr;
 import db.biblioteka.ba.fet.DBKnjigaPredmetObaveznost;
 import db.biblioteka.ba.fet.DBNastavnik;
-import db.biblioteka.ba.fet.DBObaveznost;
 import db.biblioteka.ba.fet.DBPredmet;
 import db.biblioteka.ba.fet.DBPrimjerak;
 import db.biblioteka.ba.fet.DBRezervacija;
 import db.biblioteka.ba.fet.DBRezervacijaPrimjerakNastavnik;
-import db.biblioteka.ba.fet.DBSemestar;
 import db.biblioteka.ba.fet.DBStudent;
-import db.biblioteka.ba.fet.DBVaznost;
-import db.biblioteka.ba.fet.DBVaznostObaveznost;
-import db.biblioteka.ba.fet.DBVrstaKnjige;
 import db.biblioteka.ba.fet.GetDbTables;
 import modeli.biblioteka.ba.fet.MAutor;
-import modeli.biblioteka.ba.fet.MAutorRBr;
 import modeli.biblioteka.ba.fet.MIzdavac;
 import modeli.biblioteka.ba.fet.MKnjiga;
 import modeli.biblioteka.ba.fet.MKnjigaAutorRBr;
 import modeli.biblioteka.ba.fet.MKnjigaPredmetObaveznost;
 import modeli.biblioteka.ba.fet.MNastavnik;
-import modeli.biblioteka.ba.fet.MObaveznost;
 import modeli.biblioteka.ba.fet.MPredmet;
 import modeli.biblioteka.ba.fet.MPrimjerak;
 import modeli.biblioteka.ba.fet.MRezervacija;
@@ -62,11 +54,8 @@ import modeli.biblioteka.ba.fet.MRezervacijaPrimjerakNastavnik;
 import modeli.biblioteka.ba.fet.MRezervacijaPrimjerakStudent;
 import modeli.biblioteka.ba.fet.MSemestar;
 import modeli.biblioteka.ba.fet.MStudent;
-import modeli.biblioteka.ba.fet.MVaznost;
-import modeli.biblioteka.ba.fet.MVaznostObaveznost;
 import modeli.biblioteka.ba.fet.MVrstaKnjige;
 import razno.biblioteka.fet.ba.DateLabelFormatter;
-import tabele.biblioteka.ba.fet.TKnjiga;
 import tabele.biblioteka.ba.fet.TRezervacijaPrimjerakNastavnik;
 
 import java.awt.event.ActionListener;
@@ -93,7 +82,6 @@ public class NastavnikGUI {
 	private static JTable tableNastavnici;
 	private static JTable tableStudenti;
 
-	
 	private JTextField bibliotekarTxtNaslovKnjiga;
 	private JTextField bibliotekarTxtOrigNaslovKnjiga;
 	private JTextField bibliotekarTxtBrStranicaKnjiga;
@@ -126,6 +114,8 @@ public class NastavnikGUI {
 	private static JTextField txtFilterTableIzdateKjnjigeStudentima;
 	private static JTextField txtFilterTableIzdateKjnjigeNastavnicima;
 	private static JTextField txtFilterPredmet;
+	private JTextField txtFilterrezervacijestudenti;
+	private JTextField txtFilterrezervacijenastavnik;
 
 	
 	/**
@@ -156,7 +146,7 @@ public class NastavnikGUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 859, 496);
+		frame.setBounds(100, 100, 859, 582);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
@@ -428,7 +418,7 @@ public class NastavnikGUI {
 		/*
 		 * test
 		 */
-		izdateKnjigeStudenti();
+		rezervacije();
 		
 	}
 
@@ -5519,7 +5509,7 @@ public class NastavnikGUI {
 
 	private void rezervacije() {
 		JInternalFrame rezervacije = new JInternalFrame("Rezervacije", true, true, true);
-		rezervacije.setBounds(12, 12, 799, 438);
+		rezervacije.setBounds(12, 12, 799, 500);
 		rezervacije.setVisible(true);
 		frame.getContentPane().add(rezervacije);
 		rezervacije.getContentPane().setLayout(null);
@@ -5550,23 +5540,9 @@ public class NastavnikGUI {
 		bibliotekarTableRezervStud.getColumnModel().getColumn(4).setPreferredWidth(80);
 		bibliotekarTableRezervStud.getColumnModel().getColumn(5).setPreferredWidth(80);
 
-		/*
-		 * praznimo tabelu kako bi svaki put bila novim podacima napunjena (da
-		 * ne bi se punila duplo itd).
-		 */
 		DefaultTableModel model = (DefaultTableModel) bibliotekarTableRezervStud.getModel();
 		model.setRowCount(0);
-
-		/*
-		 * konektovanje na bp tabelu RezervacijaPrimjerakStudent, kako bi
-		 * popunili tabelu odgovarajucim elementima
-		 */
 		for (MRezervacijaPrimjerakStudent rps : GetDbTables.getTableRezervacijaPrimjerakStudent()) {
-			/*
-			 * Treba da dohvatimo studenta, rezervaciju i primjerak (a iz
-			 * primjerka naziv knjige iz tabele kjiga) kako bi ih upisali u
-			 * tabelu
-			 */
 			MStudent student = GetDbTables.getStudentBySifra(rps.getSifStudent());
 			MRezervacija rezervacijaStud = GetDbTables.getRezervacijaBySifra(rps.getSifRezervacija());
 			MPrimjerak primjerak = GetDbTables.getPrimjerakBySifra(rps.getSifPrimjerak());
@@ -5577,7 +5553,15 @@ public class NastavnikGUI {
 						knjiga.getOrigNaslov(), primjerak.getInventartniBr(), rezervacijaStud.getDatRezervacija(),
 						rezervacijaStud.getDatVracanja() }); 
 		}
-
+		/*
+		txtFilterrezervacijestudenti = new JTextField();
+		txtFilterrezervacijestudenti.setText("FilterRezervacijeStudenti");
+		txtFilterrezervacijestudenti.setBounds(194, 12, 254, 19);
+		rezervacije.getContentPane().add(txtFilterrezervacijestudenti);
+		txtFilterrezervacijestudenti.setColumns(10);
+		
+		filterTableByColumn(bibliotekarTableRezervStud, 1, txtFilterrezervacijestudenti);
+		*/
 		bibliotekarTableRezervStud.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -5601,11 +5585,11 @@ public class NastavnikGUI {
 		
 		// Za nastavnike
 		JLabel lblRezervacijeNastavnika = new JLabel("Rezervacije nastavnika:");
-		lblRezervacijeNastavnika.setBounds(12, 220, 170, 15);
+		lblRezervacijeNastavnika.setBounds(12, 222, 170, 15);
 		rezervacije.getContentPane().add(lblRezervacijeNastavnika);
 
 		JScrollPane scrollPaneNast = new JScrollPane();
-		scrollPaneNast.setBounds(12, 244, 765, 150);
+		scrollPaneNast.setBounds(12, 249, 765, 207);
 		rezervacije.getContentPane().add(scrollPaneNast);
 
 		bibliotekarTableRezervNast = new JTable() {
@@ -5618,6 +5602,7 @@ public class NastavnikGUI {
 		scrollPaneNast.setViewportView(bibliotekarTableRezervNast);
 		bibliotekarTableRezervNast.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Sif.Rezerv.", "Nastavnik",
 				"Knjiga", "Inv.Br.", "Dat.rezervacije", "Dat. vra\u0107anja" }));
+
 		bibliotekarTableRezervNast.getColumnModel().getColumn(0).setPreferredWidth(50);
 		bibliotekarTableRezervNast.getColumnModel().getColumn(1).setPreferredWidth(150);
 		bibliotekarTableRezervNast.getColumnModel().getColumn(2).setPreferredWidth(200);
@@ -5640,7 +5625,15 @@ public class NastavnikGUI {
 						knjiga.getOrigNaslov(), primjerak.getInventartniBr(), rezervacijaNast.getDatRezervacija(),
 						rezervacijaNast.getDatVracanja() }); 
 		}
-
+		/*
+		txtFilterrezervacijenastavnik = new JTextField();
+		txtFilterrezervacijenastavnik.setText("FilterRezervacijeNastavnik");
+		txtFilterrezervacijenastavnik.setBounds(194, 220, 254, 19);
+		rezervacije.getContentPane().add(txtFilterrezervacijenastavnik);
+		txtFilterrezervacijenastavnik.setColumns(10);
+		
+		filterTableByColumn(bibliotekarTableRezervNast, 1, txtFilterrezervacijenastavnik);
+		
 		bibliotekarTableRezervNast.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -6217,7 +6210,7 @@ public class NastavnikGUI {
 	}
 
 	
-private void potvrdiVracanje(String invBr) {
+	private void potvrdiVracanje(String invBr) {
 		JInternalFrame potvrdiVracanje = new JInternalFrame("potvrdi vracanje", true, true, true);
 		potvrdiVracanje.setBounds(12, 12, 310, 193);
 		potvrdiVracanje.setVisible(true);
@@ -6363,9 +6356,6 @@ private void potvrdiVracanje(String invBr) {
 	}
 
 	
-	/*
-	 * filtriranje tabela
-	 */
 	private static void filterTableByColumn(JTable jTable, int columnIndex, JTextField txtFilterText) {
 		TableRowSorter<TableModel> rowSorter1 = new TableRowSorter<>(jTable.getModel());
 		jTable.setRowSorter(rowSorter1);
