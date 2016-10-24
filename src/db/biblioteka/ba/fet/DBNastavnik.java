@@ -68,6 +68,25 @@ public class DBNastavnik {
 		return true;
 	}	
 	
+	public static boolean updateNastavnik(String ime, String prezime, String password, int sifNastavnik){
+		String sqlUpdate = "UPDATE nastavnik SET imeNastavnik = ?, prezNastavnik =?, password = ? WHERE sifNastavnik = ?";
+		try(
+				Connection conn = DBUtil.getConnection(DBType.MYSQL);
+				PreparedStatement stmt = conn.prepareStatement(sqlUpdate, Statement.RETURN_GENERATED_KEYS);
+				) {
+			stmt.setString(1, ime);
+			stmt.setString(2, prezime);
+			stmt.setString(3, password);
+			stmt.setInt(4, sifNastavnik);
+			stmt.executeUpdate();
+		} 
+		catch (SQLException e) {
+			DBUtil.processException(e);
+			return false;
+		} 
+		return true;
+	}
+	
 	public static boolean updatePassword(String password, int sifNastavnik){
 		String sqlUpdate = "UPDATE nastavnik SET password = ? WHERE sifNastavnik = ?";
 		try(
@@ -92,6 +111,23 @@ public class DBNastavnik {
 				PreparedStatement stmt = conn.prepareStatement(sqlUpdate, Statement.RETURN_GENERATED_KEYS);
 				) {
 			stmt.setInt(1, bodovi);
+			stmt.setInt(2, sifNastavnik);
+			stmt.executeUpdate();
+		} 
+		catch (SQLException e) {
+			DBUtil.processException(e);
+			return false;
+		} 
+		return true;
+	}
+	
+	public static boolean updateZvanje(String zvanje, int sifNastavnik){
+		String sqlUpdate = "UPDATE nastavnik SET zvanje = ? WHERE sifNastavnik = ?";
+		try(
+				Connection conn = DBUtil.getConnection(DBType.MYSQL);
+				PreparedStatement stmt = conn.prepareStatement(sqlUpdate, Statement.RETURN_GENERATED_KEYS);
+				) {
+			stmt.setString(1, zvanje);
 			stmt.setInt(2, sifNastavnik);
 			stmt.executeUpdate();
 		} 

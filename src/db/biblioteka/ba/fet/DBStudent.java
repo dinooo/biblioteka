@@ -67,6 +67,25 @@ public class DBStudent {
 		return true;
 	}
 	
+	public static boolean updateStudent(String ime, String prezime, String password, int sifStudent){
+		String sqlUpdate = "UPDATE student SET imeStudent = ?, prezStudent =?, password = ? WHERE sifStudent = ?";
+		try(
+				Connection conn = DBUtil.getConnection(DBType.MYSQL);
+				PreparedStatement stmt = conn.prepareStatement(sqlUpdate, Statement.RETURN_GENERATED_KEYS);
+				) {
+			stmt.setString(1, ime);
+			stmt.setString(2, prezime);
+			stmt.setString(3, password);
+			stmt.setInt(4, sifStudent);
+			stmt.executeUpdate();
+		} 
+		catch (SQLException e) {
+			DBUtil.processException(e);
+			return false;
+		} 
+		return true;
+	}
+	
 	public static boolean updatePassword(String password, int sifStudent){
 		String sqlUpdate = "UPDATE student SET password = ? WHERE sifStudent = ?";
 		try(

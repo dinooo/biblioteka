@@ -51,6 +51,8 @@ import javax.swing.JRadioButton;
 
 public class StudentGUI {
 
+	private JTextField txtIme;
+	private JTextField txtPrezime;
 	private static JFrame frame;
 	private JTable tableZaduzenja;
 	private static JTable tableKnjige;
@@ -210,17 +212,22 @@ public class StudentGUI {
 		lblIme.setBounds(150, 12, 30, 15);
 		mojProfil.getContentPane().add(lblIme);
 
-		JLabel lblImeStud = new JLabel(student.getImeStudent());
-		lblImeStud.setBounds(203, 12, 200, 15);
-		mojProfil.getContentPane().add(lblImeStud);
+		txtIme = new JTextField();
+		txtIme.setText(student.getPassword());
+		txtIme.setBounds(203, 12, 150, 19);
+		txtIme.setText(student.getImeStudent());
+		mojProfil.getContentPane().add(txtIme);
+		txtIme.setColumns(10);
 
 		JLabel lblPrezime = new JLabel("Prezime:");
 		lblPrezime.setBounds(118, 39, 62, 15);
 		mojProfil.getContentPane().add(lblPrezime);
 
-		JLabel lblPrezimeStud = new JLabel(student.getPrezStudent());
-		lblPrezimeStud.setBounds(203, 39, 200, 15);
-		mojProfil.getContentPane().add(lblPrezimeStud);
+		txtPrezime = new JTextField();
+		txtPrezime.setBounds(203, 39, 150, 19);
+		txtPrezime.setText(student.getPrezStudent());
+		mojProfil.getContentPane().add(txtPrezime);
+		txtPrezime.setColumns(10);
 
 		JLabel lblBrojIndexa = new JLabel("Broj indexa:");
 		lblBrojIndexa.setBounds(96, 66, 84, 15);
@@ -244,7 +251,8 @@ public class StudentGUI {
 		btnPromjeniPassword.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String noviPass = txtPassword.getText();
-				DBStudent.updatePassword(noviPass, LoginGUI.sifStudentActive);
+				DBStudent.updateStudent(txtIme.getText(), txtPrezime.getText(), txtPassword.getText(), LoginGUI.sifStudentActive);
+				mojProfil.dispose();
 			}
 		});
 		btnPromjeniPassword.setBounds(364, 88, 96, 25);
@@ -1412,6 +1420,21 @@ public class StudentGUI {
 		group.add(rdbtnPredmet);
 		group.add(rdbtnKratica);
 		group.add(rdbtnProfesor);
+		
+		
+		tablePredmeti.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				int row = tablePredmeti.rowAtPoint(evt.getPoint());
+				int col = tablePredmeti.columnAtPoint(evt.getPoint());
+				if (row >= 0 && col >= 0 && evt.getClickCount() == 2) {
+					String predmet= (String) tablePredmeti.getModel().getValueAt(tablePredmeti.convertRowIndexToModel(row), 0);
+					sveKnjigeZaPredmet(predmet);
+					sviPredmeti.dispose();
+				}
+			}
+		});
+		
 	}
 
 	private void prikazSviPredmetiZaNastavnika(JInternalFrame sviPredmeti, String prezIme) {
