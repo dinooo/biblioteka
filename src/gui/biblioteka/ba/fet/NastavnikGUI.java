@@ -116,7 +116,12 @@ public class NastavnikGUI {
 	private static JTextField txtFilterPredmet;
 	private JTextField txtFilterrezervacijestudenti;
 	private JTextField txtFilterrezervacijenastavnik;
-
+	private JTextField txtFilterrezervacijestudent;
+	private JTextField txtFilterrezervacijeNast;
+	private JTable tableRezervacijeStudenata;
+	private JTable tableRezervacijeNastavnika;
+	private JTextField txtFiltervraceneknjige;
+	private JTable tableVraceneKnjige;
 	
 	/**
 	 * Launch the application.
@@ -171,6 +176,14 @@ public class NastavnikGUI {
 			}
 		});
 		mnMojProfil.add(mntmMojaZaduenja);
+		
+		JMenuItem mntmMojeVraceneKnjige = new JMenuItem("Vracene knjige");
+		mntmMojeVraceneKnjige.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mojeVraceneKnjige();
+			}
+		});
+		mnMojProfil.add(mntmMojeVraceneKnjige);
 		
 		JMenuItem mntmLogout = new JMenuItem("Logout");
 		mntmLogout.addActionListener(new ActionListener() {
@@ -276,14 +289,22 @@ public class NastavnikGUI {
 			mnUpravljanjeBibliotekom.add(mnBibliotekaBibliotekar);	
 		}
 
-		JMenuItem mntmRezervacije = new JMenuItem("Rezervacije");
-		mntmRezervacije.addActionListener(new ActionListener() {
+		JMenuItem mntmRezervacijeStud = new JMenuItem("Rezervacije studenata");
+		mntmRezervacijeStud.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				rezervacije();
+				rezervacijeStudent();
 			}
 		});
-		mnBibliotekaBibliotekar.add(mntmRezervacije);
-
+		mnBibliotekaBibliotekar.add(mntmRezervacijeStud);
+		
+		JMenuItem mntmRezervacijeNast = new JMenuItem("Rezervacije nastavnika");
+		mntmRezervacijeNast.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rezervacijeNastavnik();
+			}
+		});
+		mnBibliotekaBibliotekar.add(mntmRezervacijeNast);
+		
 		JMenuItem mntmNeizdateKnjige = new JMenuItem("Neizdate knjige");
 		mntmNeizdateKnjige.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -418,7 +439,7 @@ public class NastavnikGUI {
 		/*
 		 * test
 		 */
-		rezervacije();
+		mojeVraceneKnjige();
 		
 	}
 
@@ -513,7 +534,12 @@ public class NastavnikGUI {
 		scrollPane.setBounds(12, 34, 648, 95);
 		mojaZaduzenja.getContentPane().add(scrollPane);
 
-		tableZaduzenja = new JTable();
+		tableZaduzenja = new JTable(){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int row, int column){
+				return false; //onemogucujemo editovanje nakon dva klika
+			}
+		};
 		scrollPane.setViewportView(tableZaduzenja);
 		tableZaduzenja.setModel(new DefaultTableModel(
 				new Object[][] {
@@ -666,6 +692,65 @@ public class NastavnikGUI {
 		}	
 	}
 
+	private void mojeVraceneKnjige(){
+		JInternalFrame mojeVraceneKnjige = new JInternalFrame("Moje vracene knjige", true, true, true);
+		mojeVraceneKnjige.setBounds(12, 12, 682, 477);
+		mojeVraceneKnjige.setVisible(true);
+		frame.getContentPane().add(mojeVraceneKnjige);
+		mojeVraceneKnjige.getContentPane().setLayout(null);
+		
+		JLabel lblPretraga = new JLabel("Pretraga:");
+		lblPretraga.setBounds(12, 12, 68, 15);
+		mojeVraceneKnjige.getContentPane().add(lblPretraga);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 39, 648, 394);
+		mojeVraceneKnjige.getContentPane().add(scrollPane);
+		
+		tableVraceneKnjige = new JTable(){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int row, int column){
+				return false; //onemogucujemo editovanje nakon dva klika
+			}
+		};
+		scrollPane.setViewportView(tableVraceneKnjige);
+		tableVraceneKnjige.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Knjiga", "Inv.br", "Rezervisana", "Podignuta", "Vracena"
+			}
+		));
+		tableVraceneKnjige.getColumnModel().getColumn(0).setPreferredWidth(210);
+		tableVraceneKnjige.getColumnModel().getColumn(1).setPreferredWidth(90);
+		tableVraceneKnjige.getColumnModel().getColumn(2).setPreferredWidth(95);
+		tableVraceneKnjige.getColumnModel().getColumn(3).setPreferredWidth(95);
+		tableVraceneKnjige.getColumnModel().getColumn(4).setPreferredWidth(93);
+		
+		DefaultTableModel modelMojeVraceneKnjige = (DefaultTableModel) tableVraceneKnjige.getModel();
+		modelMojeVraceneKnjige.setRowCount(0);
+		
+		for (MRezervacija rezervacija : GetDbTables.getRezervacijaBySifNastavnik(LoginGUI.sifNastavnikActive)) {
+			if(rezervacija.getOdobrena() == -1 && rezervacija.getNastStud() == 1) {
+				MPrimjerak primjerak = GetDbTables.getPrimjerakBySifra(rezervacija.getSifPrimjerak());
+				MKnjiga knjiga = GetDbTables.getKnjigaBySifra(primjerak.getSifKnjiga());
+				
+				modelMojeVraceneKnjige.addRow(new Object[] {
+						knjiga.getOrigNaslov(), primjerak.getInventartniBr(), rezervacija.getDatRezervacija(), rezervacija.getDatPodizanja(), rezervacija.getDatKadVracena()
+				});
+			}
+		}
+		
+		
+		txtFiltervraceneknjige = new JTextField();
+		txtFiltervraceneknjige.setBounds(98, 12, 200, 19);
+		mojeVraceneKnjige.getContentPane().add(txtFiltervraceneknjige);
+		txtFiltervraceneknjige.setColumns(10);
+		
+		filterTableByColumn(tableVraceneKnjige, 0, txtFiltervraceneknjige);
+		
+	}
+	
 	private static void zaduziKnjigu(String origNaslov) {
 		JInternalFrame zaduziKnjigu = new JInternalFrame("Zaduži knjigu", true, true, true);
 		zaduziKnjigu.setBounds(12, 12, 455, 168);
@@ -2081,8 +2166,7 @@ public class NastavnikGUI {
 		});
 	}
 	
-	private void izmjeniLiteraturu(MPredmet predmet){
-		
+	private void izmjeniLiteraturu(MPredmet predmet){		
 		JInternalFrame izmjeniLiteraturu = new JInternalFrame("Izmjena literature za predmet", true, true, true);
 		izmjeniLiteraturu.setBounds(33, 12, 565, 409);
 		izmjeniLiteraturu.setVisible(true);
@@ -4245,8 +4329,7 @@ public class NastavnikGUI {
 
 	//dio za bibliotekara
 
-	private void novaKnjiga() {
-		
+	private void novaKnjiga() {		
 		JInternalFrame novaKnjiga = new JInternalFrame("Unos knjige", true, true, true);
 		novaKnjiga.setBounds(12, 12, 612, 298);
 		novaKnjiga.setVisible(true);
@@ -4952,7 +5035,6 @@ public class NastavnikGUI {
 		btnPotvrdiUnos.setBounds(217, 232, 125, 25);
 		novaKnjiga.getContentPane().add(btnPotvrdiUnos);
 	}
-
 	
 	private void noviIzdavac() {
 		JInternalFrame noviIzdavac = new JInternalFrame("Unos izdavaca", true, true, true);
@@ -5176,7 +5258,6 @@ public class NastavnikGUI {
 		noviStudent.getContentPane().add(btnPotvrdiUnos);
 	}
 
-
 	private void noviPredmet() {
 		JInternalFrame noviPredmet = new JInternalFrame("Unos predmeta", true, true, true);
 		noviPredmet.setBounds(12, 122, 479, 189);
@@ -5286,7 +5367,6 @@ public class NastavnikGUI {
 		btnPotvrdiUnos_3.setBounds(240, 124, 130, 25);
 		noviPredmet.getContentPane().add(btnPotvrdiUnos_3);
 	}
-
 
 	private void noviAutor() {
 		JInternalFrame noviAutor = new JInternalFrame("Unos autora", true, true, true);
@@ -5400,7 +5480,6 @@ public class NastavnikGUI {
 		noviAutor.getContentPane().add(btnPotrvrdiUnosStudAutor);
 	}
 
-
 	private void noviPrimjerak() {
 		JInternalFrame noviPrimjerak = new JInternalFrame("Novi primjerak knjige", true, true, true);
 		noviPrimjerak.setBounds(33, 12, 367, 195);
@@ -5506,42 +5585,45 @@ public class NastavnikGUI {
 
 	}
 
-
-	private void rezervacije() {
-		JInternalFrame rezervacije = new JInternalFrame("Rezervacije", true, true, true);
+	private void rezervacijeStudent() {
+		JInternalFrame rezervacije = new JInternalFrame("Rezervacije studenata", true, true, true);
 		rezervacije.setBounds(12, 12, 799, 500);
 		rezervacije.setVisible(true);
 		frame.getContentPane().add(rezervacije);
 		rezervacije.getContentPane().setLayout(null);
-
-		JLabel lblRezervacijeStudenata = new JLabel("Rezervacije studenata:");
+		
+		JLabel lblRezervacijeStudenata = new JLabel("Pretraga studenata:");
 		lblRezervacijeStudenata.setBounds(12, 12, 164, 15);
 		rezervacije.getContentPane().add(lblRezervacijeStudenata);
-
-		JScrollPane scrollPaneStud = new JScrollPane();
-		scrollPaneStud.setBounds(12, 39, 765, 169);
-		rezervacije.getContentPane().add(scrollPaneStud);
-
-		bibliotekarTableRezervStud = new JTable() {
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 39, 765, 417);
+		rezervacije.getContentPane().add(scrollPane);
+		
+		tableRezervacijeStudenata = new JTable(){
 			private static final long serialVersionUID = 1L;
 			public boolean isCellEditable(int row, int column) {
 				return false; // onemogucujemo editovanje nakon dva klika
 			}
 		};
-		;
-		scrollPaneStud.setViewportView(bibliotekarTableRezervStud);
-		bibliotekarTableRezervStud.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Sif.Rezerv.", "Student",
-				"Knjiga", "Inv.Br.", "Dat.rezervacije", "Dat. vra\u0107anja" }));
-
-		bibliotekarTableRezervStud.getColumnModel().getColumn(0).setPreferredWidth(50);
-		bibliotekarTableRezervStud.getColumnModel().getColumn(1).setPreferredWidth(150);
-		bibliotekarTableRezervStud.getColumnModel().getColumn(2).setPreferredWidth(200);
-		bibliotekarTableRezervStud.getColumnModel().getColumn(3).setPreferredWidth(50);
-		bibliotekarTableRezervStud.getColumnModel().getColumn(4).setPreferredWidth(80);
-		bibliotekarTableRezervStud.getColumnModel().getColumn(5).setPreferredWidth(80);
-
-		DefaultTableModel model = (DefaultTableModel) bibliotekarTableRezervStud.getModel();
-		model.setRowCount(0);
+		scrollPane.setViewportView(tableRezervacijeStudenata);
+		
+		tableRezervacijeStudenata.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Sif.rezerv.", "Br.indeksa", "Student", "Knjiga", "Inv.br", "Datum rezervacije", "Datum vracanja"
+			}
+		));
+		tableRezervacijeStudenata.getColumnModel().getColumn(2).setPreferredWidth(158);
+		tableRezervacijeStudenata.getColumnModel().getColumn(3).setPreferredWidth(150);
+		tableRezervacijeStudenata.getColumnModel().getColumn(4).setPreferredWidth(59);
+		tableRezervacijeStudenata.getColumnModel().getColumn(5).setPreferredWidth(113);
+		tableRezervacijeStudenata.getColumnModel().getColumn(6).setPreferredWidth(106);
+		
+		DefaultTableModel modelRezervStud = (DefaultTableModel) tableRezervacijeStudenata.getModel();
+		modelRezervStud.setRowCount(0);
+		
 		for (MRezervacijaPrimjerakStudent rps : GetDbTables.getTableRezervacijaPrimjerakStudent()) {
 			MStudent student = GetDbTables.getStudentBySifra(rps.getSifStudent());
 			MRezervacija rezervacijaStud = GetDbTables.getRezervacijaBySifra(rps.getSifRezervacija());
@@ -5549,24 +5631,21 @@ public class NastavnikGUI {
 			MKnjiga knjiga = GetDbTables.getKnjigaBySifra(primjerak.getSifKnjiga());
 			// upisivanje tabele
 			if (rezervacijaStud.getOdobrena() == 0)
-				model.addRow(new Object[] { rps.getSifRezPrimStud(), student.getImeStudent() + " " + student.getPrezStudent(), 
-						knjiga.getOrigNaslov(), primjerak.getInventartniBr(), rezervacijaStud.getDatRezervacija(),
+				modelRezervStud.addRow(new Object[] { 
+						rps.getSifRezPrimStud(), 
+						student.getBrIndexa(), 
+						student.getImeStudent() + " " + student.getPrezStudent(), 
+						knjiga.getOrigNaslov(), 
+						primjerak.getInventartniBr(), 
+						rezervacijaStud.getDatRezervacija(),
 						rezervacijaStud.getDatVracanja() }); 
 		}
-		/*
-		txtFilterrezervacijestudenti = new JTextField();
-		txtFilterrezervacijestudenti.setText("FilterRezervacijeStudenti");
-		txtFilterrezervacijestudenti.setBounds(194, 12, 254, 19);
-		rezervacije.getContentPane().add(txtFilterrezervacijestudenti);
-		txtFilterrezervacijestudenti.setColumns(10);
 		
-		filterTableByColumn(bibliotekarTableRezervStud, 1, txtFilterrezervacijestudenti);
-		*/
-		bibliotekarTableRezervStud.addMouseListener(new java.awt.event.MouseAdapter() {
+		tableRezervacijeStudenata.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				int row = bibliotekarTableRezervStud.rowAtPoint(evt.getPoint());
-				int col = bibliotekarTableRezervStud.columnAtPoint(evt.getPoint());
+				int row = tableRezervacijeStudenata.rowAtPoint(evt.getPoint());
+				int col = tableRezervacijeStudenata.columnAtPoint(evt.getPoint());
 				if (row >= 0 && col >= 0 && evt.getClickCount() == 2) {
 					/*
 					 * ako dodje do duplog klika, iz odabranog reda procitaj
@@ -5574,81 +5653,122 @@ public class NastavnikGUI {
 					 * resetStudentBodovi koja je ustvari novi prozor za
 					 * resetovanje negativnih bodova
 					 */
-					int sifRezPrimjStud = (int) bibliotekarTableRezervStud.getModel().getValueAt(row, 0);
+					int sifRezPrimjStud = (int) tableRezervacijeStudenata.getModel().getValueAt(tableRezervacijeStudenata.convertRowIndexToModel(row), 0);
 
 					odobriRezervacijuStud(sifRezPrimjStud);
 					rezervacije.dispose();
 				}
 			}
 		});
-
 		
-		// Za nastavnike
-		JLabel lblRezervacijeNastavnika = new JLabel("Rezervacije nastavnika:");
-		lblRezervacijeNastavnika.setBounds(12, 222, 170, 15);
-		rezervacije.getContentPane().add(lblRezervacijeNastavnika);
-
-		JScrollPane scrollPaneNast = new JScrollPane();
-		scrollPaneNast.setBounds(12, 249, 765, 207);
-		rezervacije.getContentPane().add(scrollPaneNast);
-
-		bibliotekarTableRezervNast = new JTable() {
+		txtFilterrezervacijestudent = new JTextField();
+		txtFilterrezervacijestudent.setBounds(194, 12, 200, 19);
+		rezervacije.getContentPane().add(txtFilterrezervacijestudent);
+		txtFilterrezervacijestudent.setColumns(10);
+		
+		filterTableByColumn(tableRezervacijeStudenata, 1, txtFilterrezervacijestudent);
+		JRadioButton rdbtnBrIndexa = new JRadioButton("Br. Indexa");
+		rdbtnBrIndexa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				filterTableByColumn(tableRezervacijeStudenata, 1, txtFilterrezervacijestudent);
+			}
+		});
+		rdbtnBrIndexa.setSelected(true);
+		rdbtnBrIndexa.setBounds(402, 12, 96, 23);
+		rezervacije.getContentPane().add(rdbtnBrIndexa);
+		
+		JRadioButton rdbtnImeIPrezime = new JRadioButton("Ime i prezime");
+		rdbtnImeIPrezime.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				filterTableByColumn(tableRezervacijeStudenata, 2, txtFilterrezervacijestudent);
+			}
+		});
+		rdbtnImeIPrezime.setBounds(502, 12, 119, 23);
+		rezervacije.getContentPane().add(rdbtnImeIPrezime);
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(rdbtnBrIndexa);
+		group.add(rdbtnImeIPrezime);
+		
+	}
+	
+	private void rezervacijeNastavnik() {
+		JInternalFrame rezervacije = new JInternalFrame("Rezervacije nastavnika", true, true, true);
+		rezervacije.setBounds(12, 12, 799, 500);
+		rezervacije.setVisible(true);
+		frame.getContentPane().add(rezervacije);
+		rezervacije.getContentPane().setLayout(null);
+		
+		JLabel lblRezervacijeStudenata = new JLabel("Pretraga nastavnika:");
+		lblRezervacijeStudenata.setBounds(12, 12, 150, 15);
+		rezervacije.getContentPane().add(lblRezervacijeStudenata);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 39, 765, 417);
+		rezervacije.getContentPane().add(scrollPane);
+		
+		tableRezervacijeNastavnika = new JTable(){
 			private static final long serialVersionUID = 1L;
 			public boolean isCellEditable(int row, int column) {
 				return false; // onemogucujemo editovanje nakon dva klika
 			}
 		};
-		;
-		scrollPaneNast.setViewportView(bibliotekarTableRezervNast);
-		bibliotekarTableRezervNast.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Sif.Rezerv.", "Nastavnik",
-				"Knjiga", "Inv.Br.", "Dat.rezervacije", "Dat. vra\u0107anja" }));
-
-		bibliotekarTableRezervNast.getColumnModel().getColumn(0).setPreferredWidth(50);
-		bibliotekarTableRezervNast.getColumnModel().getColumn(1).setPreferredWidth(150);
-		bibliotekarTableRezervNast.getColumnModel().getColumn(2).setPreferredWidth(200);
-		bibliotekarTableRezervNast.getColumnModel().getColumn(3).setPreferredWidth(50);
-		bibliotekarTableRezervNast.getColumnModel().getColumn(4).setPreferredWidth(80);
-		bibliotekarTableRezervNast.getColumnModel().getColumn(5).setPreferredWidth(80);
-
-		DefaultTableModel modelNast = (DefaultTableModel) bibliotekarTableRezervNast.getModel();
-		modelNast.setRowCount(0);
-
-		for (MRezervacijaPrimjerakNastavnik rpn : GetDbTables.getTableRezervacijaPrimjerakNastavnik()) {
-
-			MNastavnik nastavnik = GetDbTables.getNastavnikBySifra(rpn.getSifNastavnik());
-			MRezervacija rezervacijaNast = GetDbTables.getRezervacijaBySifra(rpn.getSifRezervacija());
-			MPrimjerak primjerak = GetDbTables.getPrimjerakBySifra(rpn.getSifPrimjerak());
+		scrollPane.setViewportView(tableRezervacijeNastavnika);
+		
+		tableRezervacijeNastavnika.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Sif.rezerv.", "Nastavnik", "Knjiga", "Inv.br", "Datum rezervacije", "Datum vracanja"
+			}
+		));
+		tableRezervacijeNastavnika.getColumnModel().getColumn(1).setPreferredWidth(158);
+		tableRezervacijeNastavnika.getColumnModel().getColumn(2).setPreferredWidth(150);
+		tableRezervacijeNastavnika.getColumnModel().getColumn(3).setPreferredWidth(59);
+		tableRezervacijeNastavnika.getColumnModel().getColumn(4).setPreferredWidth(113);
+		tableRezervacijeNastavnika.getColumnModel().getColumn(5).setPreferredWidth(106);
+		
+		DefaultTableModel modelRezervNast = (DefaultTableModel) tableRezervacijeNastavnika.getModel();
+		modelRezervNast.setRowCount(0);
+		
+		for (MRezervacijaPrimjerakNastavnik rps : GetDbTables.getTableRezervacijaPrimjerakNastavnik()) {
+			MNastavnik nastavnik = GetDbTables.getNastavnikBySifra(rps.getSifNastavnik());
+			MRezervacija rezervacijaNast = GetDbTables.getRezervacijaBySifra(rps.getSifRezervacija());
+			MPrimjerak primjerak = GetDbTables.getPrimjerakBySifra(rps.getSifPrimjerak());
 			MKnjiga knjiga = GetDbTables.getKnjigaBySifra(primjerak.getSifKnjiga());
-
+			// upisivanje tabele
 			if (rezervacijaNast.getOdobrena() == 0)
-				modelNast.addRow(new Object[] { rpn.getSifRezPrimNast(), nastavnik.getImeNastavnik() + " " + nastavnik.getPrezNastavnik(), 
-						knjiga.getOrigNaslov(), primjerak.getInventartniBr(), rezervacijaNast.getDatRezervacija(),
+				modelRezervNast.addRow(new Object[] { 
+						rps.getSifRezPrimNast(),
+						nastavnik.getImeNastavnik() + " " + nastavnik.getPrezNastavnik(), 
+						knjiga.getOrigNaslov(), 
+						primjerak.getInventartniBr(), 
+						rezervacijaNast.getDatRezervacija(),
 						rezervacijaNast.getDatVracanja() }); 
 		}
-		/*
-		txtFilterrezervacijenastavnik = new JTextField();
-		txtFilterrezervacijenastavnik.setText("FilterRezervacijeNastavnik");
-		txtFilterrezervacijenastavnik.setBounds(194, 220, 254, 19);
-		rezervacije.getContentPane().add(txtFilterrezervacijenastavnik);
-		txtFilterrezervacijenastavnik.setColumns(10);
 		
-		filterTableByColumn(bibliotekarTableRezervNast, 1, txtFilterrezervacijenastavnik);
-		
-		bibliotekarTableRezervNast.addMouseListener(new java.awt.event.MouseAdapter() {
+		tableRezervacijeNastavnika.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				int row = bibliotekarTableRezervNast.rowAtPoint(evt.getPoint());
-				int col = bibliotekarTableRezervNast.columnAtPoint(evt.getPoint());
+				int row = tableRezervacijeNastavnika.rowAtPoint(evt.getPoint());
+				int col = tableRezervacijeNastavnika.columnAtPoint(evt.getPoint());
 				if (row >= 0 && col >= 0 && evt.getClickCount() == 2) {
-
-					int sifRezPrimjNast = (int) bibliotekarTableRezervNast.getModel().getValueAt(row, 0);
+					int sifRezPrimjNast = (int) tableRezervacijeNastavnika.getModel().getValueAt(tableRezervacijeNastavnika.convertRowIndexToModel(row), 0);
 					odobriRezervacijuNast(sifRezPrimjNast);
 					rezervacije.dispose();
 				}
 			}
 		});
+		
+		txtFilterrezervacijeNast = new JTextField();
+		txtFilterrezervacijeNast.setBounds(180, 12, 200, 19);
+		rezervacije.getContentPane().add(txtFilterrezervacijeNast);
+		txtFilterrezervacijeNast.setColumns(10);
+		
+		filterTableByColumn(tableRezervacijeNastavnika, 1, txtFilterrezervacijeNast);
+		
+		
 	}
-
 
 	private void odobriRezervacijuStud(int sifRezPrimjStud) {
 		JInternalFrame odobriRezStud = new JInternalFrame("Odobravanje rezervacije", true, true, true);
@@ -5752,7 +5872,7 @@ public class NastavnikGUI {
 				br++;
 				DBStudent.updateBrPosudjenihKnjiga(br, student.getSifStudent());
 
-				rezervacije();
+				rezervacijeStudent();
 				odobriRezStud.dispose();
 			}
 		});
@@ -5762,7 +5882,7 @@ public class NastavnikGUI {
 		JButton btnPoniti = new JButton("Poništi");
 		btnPoniti.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				rezervacije();
+				rezervacijeStudent();
 				odobriRezStud.dispose();
 			}
 		});
@@ -5771,7 +5891,6 @@ public class NastavnikGUI {
 
 	}
 	
-
 	private void odobriRezervacijuNast(int sifRezPrimjNast) {
 		JInternalFrame odobriRezNast = new JInternalFrame("Odobravanje rezervacije", true, true, true);
 		odobriRezNast.setBounds(12, 12, 403, 221);
@@ -5851,7 +5970,7 @@ public class NastavnikGUI {
 				br++;
 				DBNastavnik.updateBrPosudjenihKnjiga(br, nastavnik.getSifNastavnik());
 
-				rezervacije();
+				rezervacijeNastavnik();
 				odobriRezNast.dispose();
 			}
 		});
@@ -5861,7 +5980,7 @@ public class NastavnikGUI {
 		JButton btnPoniti = new JButton("Poništi");
 		btnPoniti.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				rezervacije();
+				rezervacijeNastavnik();
 				odobriRezNast.dispose();
 			}
 		});
@@ -5869,7 +5988,6 @@ public class NastavnikGUI {
 		odobriRezNast.getContentPane().add(btnPoniti);
 
 	}
-
 
 	private void neizdateKnjige() {
 		JInternalFrame neIzdateKnjige = new JInternalFrame("Lista neizdatih knjiga", true, true, true);
@@ -5944,7 +6062,6 @@ public class NastavnikGUI {
 		}
 
 	}
-
 
 	private void izdateKnjigeStudenti() {
 		JInternalFrame izdateKnjige = new JInternalFrame("Lista izdatih knjiga studentima", true, true, true);
@@ -6094,7 +6211,6 @@ public class NastavnikGUI {
 		
 	}
 
-
 	private void izdateKnjigeNastastavnici() {
 		JInternalFrame izdateKnjigeNast = new JInternalFrame("Lista izdatih knjiga nastavnicima", true, true, true);
 		izdateKnjigeNast.setBounds(12, 12, 799, 400);
@@ -6208,7 +6324,6 @@ public class NastavnikGUI {
 			}
 		});
 	}
-
 	
 	private void potvrdiVracanje(String invBr) {
 		JInternalFrame potvrdiVracanje = new JInternalFrame("potvrdi vracanje", true, true, true);
@@ -6354,7 +6469,6 @@ public class NastavnikGUI {
 		potvrdiVracanje.getContentPane().add(btnPoniti_1);
 
 	}
-
 	
 	private static void filterTableByColumn(JTable jTable, int columnIndex, JTextField txtFilterText) {
 		TableRowSorter<TableModel> rowSorter1 = new TableRowSorter<>(jTable.getModel());
@@ -6392,7 +6506,6 @@ public class NastavnikGUI {
 
         });
 	}
-	
 	
 	private static void filterTable(JTable jTable, JTextField txtFilterText) {
 		TableRowSorter<TableModel> rowSorter1 = new TableRowSorter<>(jTable.getModel());

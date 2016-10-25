@@ -63,13 +63,15 @@ public class StudentGUI {
 	private static JTable tablePredmeti;
 	private JTextField txtPassword;
 	private JTable tableRezervacija;
+	private JTable tableVraceneKnjige;
 	private static JTextField txtFilterTableKnjige;
 	private static JTextField txtFilterTableAutori;
 	private static JTextField txtFilterIzdavaci;
 	private static JTextField txtFilterNastavnici;
 	private static JTextField txtFilterStudent;
 	private static JTextField txtFilterPredmet;
-	
+	private JTextField txtFiltervraceneknjige;
+
 	/**
 	 * Launch the application.
 	 */
@@ -122,6 +124,14 @@ public class StudentGUI {
 			}
 		});
 		
+		JMenuItem mntmMojeVraceneKnjige = new JMenuItem("Moje vracene knjige");
+		mntmMojeVraceneKnjige.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mojeVraceneKnjige();
+			}
+		});
+		
+		
 		JMenuItem mntmLogout = new JMenuItem("Logout");
 		mntmLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -132,6 +142,7 @@ public class StudentGUI {
 
 		mnMojProfil.add(mntmMojProfil);
 		mnMojProfil.add(mntmMojaZaduenja);
+		mnMojProfil.add(mntmMojeVraceneKnjige);
 		mnMojProfil.add(mntmLogout);
 
 		JMenu mnBiblioteka = new JMenu("Biblioteka");
@@ -188,12 +199,8 @@ public class StudentGUI {
 		});
 		mnFakultet.add(mntmPredmeti);
 
+		mojeVraceneKnjige();
 		
-		/*
-		 * test
-		 */
-		
-		sviStudenti();
 	}
 	
 	private void mojProfil(){
@@ -425,6 +432,67 @@ public class StudentGUI {
 			if(upisUtabelu == 1)
 				modelRez.addRow(new Object[]{knjiga.getOrigNaslov(), datPosudbeStrRez, datVracaanjaStrRez, primjerak.getInventartniBr()});
 		}	
+	}
+
+	private void mojeVraceneKnjige(){
+		JInternalFrame mojeVraceneKnjige = new JInternalFrame("Moje vracene knjige", true, true, true);
+		mojeVraceneKnjige.setBounds(12, 12, 682, 477);
+		mojeVraceneKnjige.setVisible(true);
+		frame.getContentPane().add(mojeVraceneKnjige);
+		mojeVraceneKnjige.getContentPane().setLayout(null);
+		
+		JLabel lblPretraga = new JLabel("Pretraga:");
+		lblPretraga.setBounds(12, 12, 68, 15);
+		mojeVraceneKnjige.getContentPane().add(lblPretraga);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 39, 648, 394);
+		mojeVraceneKnjige.getContentPane().add(scrollPane);
+		
+		tableVraceneKnjige = new JTable(){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int row, int column){
+				return false; //onemogucujemo editovanje nakon dva klika
+			}
+		};
+		scrollPane.setViewportView(tableVraceneKnjige);
+		tableVraceneKnjige.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Knjiga", "Inv.br", "Rezervisana", "Podignuta", "Vracena"
+			}
+		));
+		tableVraceneKnjige.getColumnModel().getColumn(0).setPreferredWidth(210);
+		tableVraceneKnjige.getColumnModel().getColumn(1).setPreferredWidth(90);
+		tableVraceneKnjige.getColumnModel().getColumn(2).setPreferredWidth(95);
+		tableVraceneKnjige.getColumnModel().getColumn(3).setPreferredWidth(95);
+		tableVraceneKnjige.getColumnModel().getColumn(4).setPreferredWidth(93);
+		
+		DefaultTableModel modelMojeVraceneKnjige = (DefaultTableModel) tableVraceneKnjige.getModel();
+		modelMojeVraceneKnjige.setRowCount(0);
+		
+		for (MRezervacija rezervacija : GetDbTables.getRezervacijaBySifStudent(LoginGUI.sifStudentActive)) {
+			if(rezervacija.getOdobrena() == -1  && rezervacija.getNastStud() == 2) {
+				MPrimjerak primjerak = GetDbTables.getPrimjerakBySifra(rezervacija.getSifPrimjerak());
+				MKnjiga knjiga = GetDbTables.getKnjigaBySifra(primjerak.getSifKnjiga());
+				System.out.println("test");
+				System.out.println(knjiga.getOrigNaslov() + " " + primjerak.getInventartniBr() + " " + rezervacija.getDatPodizanja() + " " + rezervacija.getDatKadVracena());
+				modelMojeVraceneKnjige.addRow(new Object[] {
+						knjiga.getOrigNaslov(), primjerak.getInventartniBr(), rezervacija.getDatRezervacija(), rezervacija.getDatPodizanja(), rezervacija.getDatKadVracena()
+				});
+			}
+		}
+		
+		
+		txtFiltervraceneknjige = new JTextField();
+		txtFiltervraceneknjige.setBounds(98, 12, 200, 19);
+		mojeVraceneKnjige.getContentPane().add(txtFiltervraceneknjige);
+		txtFiltervraceneknjige.setColumns(10);
+		
+		filterTableByColumn(tableVraceneKnjige, 0, txtFiltervraceneknjige);
+		
+		
 	}
 	
 	private static void zaduziKnjigu(String origNaslov) {

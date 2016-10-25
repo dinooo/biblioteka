@@ -179,6 +179,7 @@ public class GetDbTables {
 	public static MPrimjerak getPrimjerakBySifra(int sifra){
 		TPrimjerak.listaPrimjerak.clear();
 		DBPrimjerak.getPrimjerakBySifra(sifra);
+		System.out.println(TPrimjerak.listaPrimjerak.size());
 		return TPrimjerak.listaPrimjerak.get(0);
 	}
 	
@@ -203,6 +204,11 @@ public class GetDbTables {
 	public static ArrayList<MRezervacija> getRezervacijaBySifStudent(int sifra){
 		TRezervacija.listaRezervacija.clear();
 		DBRezervacija.getRezervacijeBySifStudent(sifra);
+		return TRezervacija.listaRezervacija;
+	}
+	public static ArrayList<MRezervacija> getRezervacijaBySifNastavnik(int sifra){
+		TRezervacija.listaRezervacija.clear();
+		DBRezervacija.getRezervacijeBySifNast(sifra);
 		return TRezervacija.listaRezervacija;
 	}
 	

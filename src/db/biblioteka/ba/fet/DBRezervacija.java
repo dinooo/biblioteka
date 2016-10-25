@@ -314,4 +314,35 @@ public class DBRezervacija {
 			}
 		}
 	}
+	
+	public static void getRezervacijeBySifNast(int sifra){
+		String SQL2 = "SELECT * FROM rezervacija WHERE sifKorisnik = ? AND nastStud = 1";
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			dbConnection = DBUtil.getConnection(DBType.MYSQL);
+			preparedStatement = dbConnection.prepareStatement(SQL2);
+			preparedStatement.setInt(1, sifra);
+			ResultSet rs = preparedStatement.executeQuery();
+			TRezervacija.getListaRezervacija(rs);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (dbConnection != null) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 }
