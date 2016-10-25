@@ -526,8 +526,8 @@ public class NastavnikGUI {
 		frame.getContentPane().add(mojaZaduzenja);
 		mojaZaduzenja.getContentPane().setLayout(null);
 
-		JLabel lblZadueneKnjige = new JLabel("Zadužene knjige:");
-		lblZadueneKnjige.setBounds(12, 7, 124, 15);
+		JLabel lblZadueneKnjige = new JLabel("Rezervisane knjige:");
+		lblZadueneKnjige.setBounds(12, 7, 139, 15);
 		mojaZaduzenja.getContentPane().add(lblZadueneKnjige);
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -616,8 +616,8 @@ public class NastavnikGUI {
 		/*
 		 * tabela rezervacija
 		 */
-		JLabel lblRezervisaneKnjige = new JLabel("Rezervisane knjige:");
-		lblRezervisaneKnjige.setBounds(12, 141, 139, 15);
+		JLabel lblRezervisaneKnjige = new JLabel("Zaduzene knjige:");
+		lblRezervisaneKnjige.setBounds(12, 141, 124, 15);
 		mojaZaduzenja.getContentPane().add(lblRezervisaneKnjige);
 
 		JScrollPane scrollPaneRezerv = new JScrollPane();
