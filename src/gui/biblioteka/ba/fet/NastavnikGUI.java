@@ -23,6 +23,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -439,7 +440,6 @@ public class NastavnikGUI {
 		/*
 		 * test
 		 */
-		izmjeniLiteraturuPredmet();
 		
 	}
 
@@ -2128,7 +2128,7 @@ public class NastavnikGUI {
 
 	private void izmjeniLiteraturuPredmet(){
 		JInternalFrame izmjeniLiteraturaPredmet = new JInternalFrame("Izmjena literature za predmet", true, true, true);
-		izmjeniLiteraturaPredmet.setBounds(33, 12, 564, 409);
+		izmjeniLiteraturaPredmet.setBounds(281, 12, 564, 409);
 		izmjeniLiteraturaPredmet.setVisible(true);
 		frame.getContentPane().add(izmjeniLiteraturaPredmet);
 		izmjeniLiteraturaPredmet.getContentPane().setLayout(null);
@@ -2160,8 +2160,8 @@ public class NastavnikGUI {
 		btnIzmjeni.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {		
 				//prosljedjujemo predmet preko naziv predmeta iz combo boxa
-				izmjeniLiteraturu(GetDbTables.getPredmetBynaziv((String)cmbBoxPredmLiteratura.getSelectedItem()));
 				izmjeniLiteraturaPredmet.dispose();
+				izmjeniLiteraturu(GetDbTables.getPredmetBynaziv((String)cmbBoxPredmLiteratura.getSelectedItem()));
 			}
 		});
 	}
@@ -2190,19 +2190,22 @@ public class NastavnikGUI {
 		 */
 		ArrayList<MKnjiga> knjigaListaTemp = GetDbTables.getTableKnjige();
 		ArrayList<MKnjiga> knjigaLista = new ArrayList<>(knjigaListaTemp);
-		
+		int kpoDa1,kpoDa2,kpoDa3,kpoDa4,kpoDa5,kpoDa6,kpoDa7,kpoNe1,kpoNe2,kpoNe3,kpoNe4,kpoNe5,kpoNe6,kpoNe7;
+				
 		JComboBox<String> cmbBoxObavLit1 = new JComboBox<String>();
-		cmbBoxObavLit1.setBounds(12, 81, 250, 24);
 		MKnjiga knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 1);
+		kpoDa1 = GetDbTables.getSifKnjPredObavZaObavKnjigu(predmet, 1);
+		cmbBoxObavLit1.setBounds(12, 81, 250, 24);
 		if (knjiga != null) {
 			cmbBoxObavLit1.addItem(knjiga.getNaslov());
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxObavLit1.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit1);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit1);			
 		
 		JComboBox<String> cmbBoxObavLit2 = new JComboBox<String>();
+		kpoDa2 = GetDbTables.getSifKnjPredObavZaObavKnjigu(predmet, 2);
 		cmbBoxObavLit2.setBounds(12, 117, 250, 24);
 		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 2);
 		if (knjiga != null) {
@@ -2210,10 +2213,11 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxObavLit2.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit2);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit2);			
 		
 		JComboBox<String> cmbBoxObavLit3 = new JComboBox<String>();
+		kpoDa3 = GetDbTables.getSifKnjPredObavZaObavKnjigu(predmet, 3);
 		cmbBoxObavLit3.setBounds(12, 157, 250, 24);
 		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 3);
 		if (knjiga != null) {
@@ -2221,10 +2225,11 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxObavLit3.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit3);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit3);			
 		
 		JComboBox<String> cmbBoxObavLit4 = new JComboBox<String>();
+		kpoDa4 = GetDbTables.getSifKnjPredObavZaObavKnjigu(predmet, 4);
 		cmbBoxObavLit4.setBounds(12, 193, 250, 24);
 		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 4);
 		if (knjiga != null) {
@@ -2232,10 +2237,11 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxObavLit4.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit4);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit4);			
 		
 		JComboBox<String> cmbBoxObavLit5 = new JComboBox<String>();
+		kpoDa5 = GetDbTables.getSifKnjPredObavZaObavKnjigu(predmet, 5);
 		cmbBoxObavLit5.setBounds(12, 229, 250, 24);
 		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 5);
 		if (knjiga != null) {
@@ -2243,10 +2249,11 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxObavLit5.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit5);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit5);			
 		
 		JComboBox<String> cmbBoxObavLit6 = new JComboBox<String>();
+		kpoDa6 = GetDbTables.getSifKnjPredObavZaObavKnjigu(predmet, 6);
 		cmbBoxObavLit6.setBounds(12, 267, 250, 24);
 		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 6);
 		if (knjiga != null) {
@@ -2254,10 +2261,11 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxObavLit6.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit6);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit6);			
 		
 		JComboBox<String> cmbBoxObavLit7 = new JComboBox<String>();
+		kpoDa7 = GetDbTables.getSifKnjPredObavZaObavKnjigu(predmet, 7);
 		cmbBoxObavLit7.setBounds(12, 303, 250, 24);
 		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 7);
 		if (knjiga != null) {
@@ -2265,8 +2273,8 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxObavLit7.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit7);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit7);			
 		
 		JSeparator separator = new JSeparator();
 		separator.setOrientation(SwingConstants.VERTICAL);
@@ -2280,6 +2288,7 @@ public class NastavnikGUI {
 		izmjeniLiteraturu.getContentPane().add(lblNeobaveznaLiteratura);
 
 		JComboBox<String> cmbBoxNeObavLit1 = new JComboBox<String>();
+		kpoNe1 = GetDbTables.getSifKnjPredObavZaNeObavKnjigu(predmet, 1);
 		cmbBoxNeObavLit1.setBounds(288, 81, 250, 24);
 		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 1);
 		if (knjiga != null) {
@@ -2287,10 +2296,11 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxNeObavLit1.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit1);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit1);			
 		
 		JComboBox<String> cmbBoxNeObavLit2 = new JComboBox<String>();	
+		kpoNe2 = GetDbTables.getSifKnjPredObavZaNeObavKnjigu(predmet, 2);
 		cmbBoxNeObavLit2.setBounds(288, 117, 250, 24);
 		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 2);
 		if (knjiga != null) {
@@ -2298,10 +2308,11 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxNeObavLit2.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit2);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit2);			
 		
 		JComboBox<String> cmbBoxNeObavLit3 = new JComboBox<String>();
+		kpoNe3 = GetDbTables.getSifKnjPredObavZaNeObavKnjigu(predmet, 3);
 		cmbBoxNeObavLit3.setBounds(288, 157, 250, 24);
 		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 3);
 		if (knjiga != null) {
@@ -2309,10 +2320,11 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxNeObavLit3.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit3);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit3);			
 		
 		JComboBox<String> cmbBoxNeObavLit4 = new JComboBox<String>();
+		kpoNe4 = GetDbTables.getSifKnjPredObavZaNeObavKnjigu(predmet, 4);
 		cmbBoxNeObavLit4.setBounds(288, 193, 250, 24);
 		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 4);
 		if (knjiga != null) {
@@ -2320,10 +2332,11 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxNeObavLit4.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit4);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit4);			
 		
 		JComboBox<String> cmbBoxNeObavLit5 = new JComboBox<String>();
+		kpoNe5 = GetDbTables.getSifKnjPredObavZaNeObavKnjigu(predmet, 5);
 		cmbBoxNeObavLit5.setBounds(288, 229, 250, 24);
 		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 5);
 		if (knjiga != null) {
@@ -2331,10 +2344,11 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxNeObavLit5.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit5);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit5);			
 		
 		JComboBox<String> cmbBoxNeObavLit6 = new JComboBox<String>();
+		kpoNe6 = GetDbTables.getSifKnjPredObavZaNeObavKnjigu(predmet, 6);
 		cmbBoxNeObavLit6.setBounds(288, 267, 250, 24);
 		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 6);
 		if (knjiga != null) {
@@ -2342,10 +2356,11 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxNeObavLit6.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit6);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit6);			
 		
 		JComboBox<String> cmbBoxNeObavLit7 = new JComboBox<String>();
+		kpoNe7 = GetDbTables.getSifKnjPredObavZaNeObavKnjigu(predmet, 1);
 		cmbBoxNeObavLit7.setBounds(288, 303, 250, 24);
 		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 7);
 		if (knjiga != null) {
@@ -2353,10 +2368,146 @@ public class NastavnikGUI {
 			for (MKnjiga knj : knjigaLista) {
 				cmbBoxNeObavLit7.addItem(knj.getNaslov());
 			}	
-			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit7);			
 		}
+		izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit7);			
 		
+		JButton btnPotvrdiUnos_7 = new JButton("Potvrdi");
+		btnPotvrdiUnos_7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MKnjigaPredmetObaveznost kpo = new MKnjigaPredmetObaveznost();
+				String pomS = predmet.getNazPredmet();
+				kpo.setSifPredmet(GetDbTables.getSifPredmetByNaziv(pomS)); 
+
+				if(cmbBoxObavLit1.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(1);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxObavLit1.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoDa1, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxObavLit2.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(2);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxObavLit2.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoDa2, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxObavLit3.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(3);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxObavLit3.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoDa3, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxObavLit4.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(4);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxObavLit4.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoDa4, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxObavLit5.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(5);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxObavLit5.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoDa5, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxObavLit6.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(6);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxObavLit6.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoDa6, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxObavLit7.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(7);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxObavLit7.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoDa7, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				
+				
+				
+				
+				if(cmbBoxNeObavLit1.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(1);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxNeObavLit1.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoNe1, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxNeObavLit2.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(2);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxNeObavLit2.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoNe2, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxNeObavLit3.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(3);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxNeObavLit3.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoNe3, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxNeObavLit4.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(4);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxNeObavLit4.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoNe4, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxNeObavLit5.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(5);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxNeObavLit5.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoNe5, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxNeObavLit6.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(6);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxNeObavLit6.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoNe6, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+				if(cmbBoxNeObavLit7.getSelectedIndex() > 0){
+					int sifraVazn = GetDbTables.getSifVaznost(7);
+					int sifraObav = GetDbTables.getSifObaveznost(1);
+					kpo.setSifVaznObav(GetDbTables.getSifVazObavBySifVaznostSifObaveznost(sifraVazn, sifraObav));
+					String odabKnjiga = (String) cmbBoxNeObavLit7.getSelectedItem();
+					kpo.setSifKnjiga(GetDbTables.getSifKnjigaByNaslov(odabKnjiga));
+					DBKnjigaPredmetObaveznost.updateKnjigaPredmetObaveznost(kpoNe7, kpo.getSifVaznObav(), kpo.getSifKnjiga(), kpo.getSifPredmet()); 
+				}
+			}
+		});
+		btnPotvrdiUnos_7.setBounds(132, 339, 130, 25);
+		izmjeniLiteraturu.getContentPane().add(btnPotvrdiUnos_7);
 		
+		JButton btnPoniti = new JButton("Poništi");
+		btnPoniti.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				izmjeniLiteraturuPredmet();
+				izmjeniLiteraturu.dispose();
+			}
+		});
+		btnPoniti.setBounds(294, 339, 130, 25);
+		izmjeniLiteraturu.getContentPane().add(btnPoniti);
 
 	}
 	

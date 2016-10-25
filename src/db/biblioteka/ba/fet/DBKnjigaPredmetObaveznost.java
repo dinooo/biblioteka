@@ -124,4 +124,93 @@ public class DBKnjigaPredmetObaveznost {
 		}
 		return true;
 	}
+
+	public static void getSifKnjPredObavZaPredmet(int sifPredmet, int vaznost){
+		String SQL2 = "SELECT * FROM KnjigaPredmetObaveznost WHERE sifPredmet = ? AND sifVaznObav IN (SELECT sifVaznObav FROM VaznostObaveznost WHERE sifVaznost = ?  AND sifObaveznost = 1)";	
+		
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			dbConnection = DBUtil.getConnection(DBType.MYSQL);
+			preparedStatement = dbConnection.prepareStatement(SQL2);
+			preparedStatement.setInt(1, sifPredmet);
+			preparedStatement.setInt(2, vaznost);
+
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			TKnjigaPredmetObaveznost.getListaKnjigaPredmetObaveznost(rs);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (dbConnection != null) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static void getSifKnjPredNeObavZaPredmet(int sifPredmet, int vaznost){
+		String SQL2 = "SELECT * FROM KnjigaPredmetObaveznost WHERE sifPredmet = ? AND sifVaznObav IN (SELECT sifVaznObav FROM VaznostObaveznost WHERE sifVaznost = ? AND sifObaveznost = 2)";	
+		
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			dbConnection = DBUtil.getConnection(DBType.MYSQL);
+			preparedStatement = dbConnection.prepareStatement(SQL2);
+			preparedStatement.setInt(1, sifPredmet);
+			preparedStatement.setInt(2, vaznost);
+
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			TKnjigaPredmetObaveznost.getListaKnjigaPredmetObaveznost(rs);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (dbConnection != null) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+
+	public static boolean updateKnjigaPredmetObaveznost(int sifKnjPredObav, int sifVaznObav, int sifKnjiga, int sifPredmet){
+		String sqlUpdate = "UPDATE KnjigaPredmetObaveznost SET sifVaznObav = ?, sifKnjiga = ?, sifPredmet = ? WHERE sifKnjPredObav = ?";
+		try(
+				Connection conn = DBUtil.getConnection(DBType.MYSQL);
+				PreparedStatement stmt = conn.prepareStatement(sqlUpdate, Statement.RETURN_GENERATED_KEYS);
+				) {
+			stmt.setInt(1, sifVaznObav);
+			stmt.setInt(2, sifKnjiga);
+			stmt.setInt(3, sifPredmet);
+			stmt.setInt(4, sifKnjPredObav);
+			stmt.executeUpdate();
+		} 
+		catch (SQLException e) {
+			DBUtil.processException(e);
+			return false;
+		} 
+		return true;
+	}
+	
 }

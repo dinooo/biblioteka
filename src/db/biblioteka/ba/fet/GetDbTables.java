@@ -80,13 +80,39 @@ public class GetDbTables {
 	public static MKnjiga getObaveznuKnjiguZaVaznost(MPredmet predmet, int vaznost) {
 		TKnjiga.listaKnjiga.clear();
 		DBKnjiga.getObavezneKnjigeZaPredmet(predmet.getSifPredmet(), vaznost);
-		return TKnjiga.listaKnjiga.get(0);
+		for (MKnjiga knjiga : TKnjiga.listaKnjiga) {
+			return knjiga;
+		}
+		return null;
+	}
+	
+	public static int getSifKnjPredObavZaObavKnjigu(MPredmet predmet, int vaznost){
+		TKnjigaPredmetObaveznost.listaKnjigaPredmetObaveznost.clear();
+		DBKnjigaPredmetObaveznost.getSifKnjPredObavZaPredmet(predmet.getSifPredmet(), vaznost);
+		for (MKnjigaPredmetObaveznost kpo : TKnjigaPredmetObaveznost.listaKnjigaPredmetObaveznost) {
+			return kpo.getSifKnjPredObav();
+		}
+		return 0;
+
+	}
+	
+	public static int getSifKnjPredObavZaNeObavKnjigu(MPredmet predmet, int vaznost){
+		TKnjigaPredmetObaveznost.listaKnjigaPredmetObaveznost.clear();
+		DBKnjigaPredmetObaveznost.getSifKnjPredNeObavZaPredmet(predmet.getSifPredmet(), vaznost);
+		for (MKnjigaPredmetObaveznost kpo : TKnjigaPredmetObaveznost.listaKnjigaPredmetObaveznost) {
+			return kpo.getSifKnjPredObav();
+		}
+		return 0;
+
 	}
 	
 	public static MKnjiga getNeObaveznuKnjiguZaVaznost(MPredmet predmet, int vaznost) {
 		TKnjiga.listaKnjiga.clear();
 		DBKnjiga.getNeObavezneKnjigeZaPredmet(predmet.getSifPredmet(), vaznost);
-		return TKnjiga.listaKnjiga.get(0);
+		for (MKnjiga knjiga : TKnjiga.listaKnjiga) {
+			return knjiga;
+		}
+		return null;
 	}
 	
 	public static MKnjiga getKnjigaBySifra(int sifra){
