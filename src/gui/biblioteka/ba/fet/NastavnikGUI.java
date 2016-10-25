@@ -439,7 +439,7 @@ public class NastavnikGUI {
 		/*
 		 * test
 		 */
-		mojeVraceneKnjige();
+		izmjeniLiteraturuPredmet();
 		
 	}
 
@@ -2166,7 +2166,201 @@ public class NastavnikGUI {
 		});
 	}
 	
-	private void izmjeniLiteraturu(MPredmet predmet){		
+	private void izmjeniLiteraturu(MPredmet predmet){
+		JInternalFrame izmjeniLiteraturu = new JInternalFrame("Izmjena literature za predmet", true, true, true);
+		izmjeniLiteraturu.setBounds(33, 12, 565, 409);
+		izmjeniLiteraturu.setVisible(true);
+		frame.getContentPane().add(izmjeniLiteraturu);
+		izmjeniLiteraturu.getContentPane().setLayout(null);
+		
+
+		/*
+		 * ispisati prosljedjeni predmet
+		 */
+		JLabel lblPredLiteratura = new JLabel("Predmet: " + predmet.getNazPredmet());
+		lblPredLiteratura.setBounds(12, 12, 400, 15);
+		izmjeniLiteraturu.getContentPane().add(lblPredLiteratura);
+
+		JLabel lblObaveznaLiteratura = new JLabel("Obavezna literatura:");
+		lblObaveznaLiteratura.setBounds(12, 54, 148, 15);
+		izmjeniLiteraturu.getContentPane().add(lblObaveznaLiteratura);
+
+		/*
+		 * Punimo prvi combo box sa svim knjigama
+		 */
+		ArrayList<MKnjiga> knjigaListaTemp = GetDbTables.getTableKnjige();
+		ArrayList<MKnjiga> knjigaLista = new ArrayList<>(knjigaListaTemp);
+		
+		JComboBox<String> cmbBoxObavLit1 = new JComboBox<String>();
+		cmbBoxObavLit1.setBounds(12, 81, 250, 24);
+		MKnjiga knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 1);
+		if (knjiga != null) {
+			cmbBoxObavLit1.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxObavLit1.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit1);			
+		}
+		
+		JComboBox<String> cmbBoxObavLit2 = new JComboBox<String>();
+		cmbBoxObavLit2.setBounds(12, 117, 250, 24);
+		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 2);
+		if (knjiga != null) {
+			cmbBoxObavLit2.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxObavLit2.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit2);			
+		}
+		
+		JComboBox<String> cmbBoxObavLit3 = new JComboBox<String>();
+		cmbBoxObavLit3.setBounds(12, 157, 250, 24);
+		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 3);
+		if (knjiga != null) {
+			cmbBoxObavLit3.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxObavLit3.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit3);			
+		}
+		
+		JComboBox<String> cmbBoxObavLit4 = new JComboBox<String>();
+		cmbBoxObavLit4.setBounds(12, 193, 250, 24);
+		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 4);
+		if (knjiga != null) {
+			cmbBoxObavLit4.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxObavLit4.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit4);			
+		}
+		
+		JComboBox<String> cmbBoxObavLit5 = new JComboBox<String>();
+		cmbBoxObavLit5.setBounds(12, 229, 250, 24);
+		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 5);
+		if (knjiga != null) {
+			cmbBoxObavLit5.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxObavLit5.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit5);			
+		}
+		
+		JComboBox<String> cmbBoxObavLit6 = new JComboBox<String>();
+		cmbBoxObavLit6.setBounds(12, 267, 250, 24);
+		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 6);
+		if (knjiga != null) {
+			cmbBoxObavLit6.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxObavLit6.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit6);			
+		}
+		
+		JComboBox<String> cmbBoxObavLit7 = new JComboBox<String>();
+		cmbBoxObavLit7.setBounds(12, 303, 250, 24);
+		knjiga = GetDbTables.getObaveznuKnjiguZaVaznost(predmet, 7);
+		if (knjiga != null) {
+			cmbBoxObavLit7.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxObavLit7.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxObavLit7);			
+		}
+		
+		JSeparator separator = new JSeparator();
+		separator.setOrientation(SwingConstants.VERTICAL);
+		separator.setBounds(274, 54, 2, 273);
+		izmjeniLiteraturu.getContentPane().add(separator);
+		
+		//neobavezna literatura
+		
+		JLabel lblNeobaveznaLiteratura = new JLabel("Neobavezna literatura:");
+		lblNeobaveznaLiteratura.setBounds(294, 54, 165, 15);
+		izmjeniLiteraturu.getContentPane().add(lblNeobaveznaLiteratura);
+
+		JComboBox<String> cmbBoxNeObavLit1 = new JComboBox<String>();
+		cmbBoxNeObavLit1.setBounds(288, 81, 250, 24);
+		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 1);
+		if (knjiga != null) {
+			cmbBoxNeObavLit1.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxNeObavLit1.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit1);			
+		}
+		
+		JComboBox<String> cmbBoxNeObavLit2 = new JComboBox<String>();	
+		cmbBoxNeObavLit2.setBounds(288, 117, 250, 24);
+		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 2);
+		if (knjiga != null) {
+			cmbBoxNeObavLit2.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxNeObavLit2.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit2);			
+		}
+		
+		JComboBox<String> cmbBoxNeObavLit3 = new JComboBox<String>();
+		cmbBoxNeObavLit3.setBounds(288, 157, 250, 24);
+		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 3);
+		if (knjiga != null) {
+			cmbBoxNeObavLit3.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxNeObavLit3.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit3);			
+		}
+		
+		JComboBox<String> cmbBoxNeObavLit4 = new JComboBox<String>();
+		cmbBoxNeObavLit4.setBounds(288, 193, 250, 24);
+		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 4);
+		if (knjiga != null) {
+			cmbBoxNeObavLit4.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxNeObavLit4.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit4);			
+		}
+		
+		JComboBox<String> cmbBoxNeObavLit5 = new JComboBox<String>();
+		cmbBoxNeObavLit5.setBounds(288, 229, 250, 24);
+		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 5);
+		if (knjiga != null) {
+			cmbBoxNeObavLit5.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxNeObavLit5.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit5);			
+		}
+		
+		JComboBox<String> cmbBoxNeObavLit6 = new JComboBox<String>();
+		cmbBoxNeObavLit6.setBounds(288, 267, 250, 24);
+		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 6);
+		if (knjiga != null) {
+			cmbBoxNeObavLit6.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxNeObavLit6.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit6);			
+		}
+		
+		JComboBox<String> cmbBoxNeObavLit7 = new JComboBox<String>();
+		cmbBoxNeObavLit7.setBounds(288, 303, 250, 24);
+		knjiga = GetDbTables.getNeObaveznuKnjiguZaVaznost(predmet, 7);
+		if (knjiga != null) {
+			cmbBoxNeObavLit7.addItem(knjiga.getNaslov());
+			for (MKnjiga knj : knjigaLista) {
+				cmbBoxNeObavLit7.addItem(knj.getNaslov());
+			}	
+			izmjeniLiteraturu.getContentPane().add(cmbBoxNeObavLit7);			
+		}
+		
+		
+
+	}
+	
+	private void resetujiLiteraturu(MPredmet predmet){		
 		JInternalFrame izmjeniLiteraturu = new JInternalFrame("Izmjena literature za predmet", true, true, true);
 		izmjeniLiteraturu.setBounds(33, 12, 565, 409);
 		izmjeniLiteraturu.setVisible(true);

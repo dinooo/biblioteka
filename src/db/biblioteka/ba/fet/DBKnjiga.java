@@ -325,4 +325,68 @@ public class DBKnjiga {
 		}
 	}
 	
+	public static void getObavezneKnjigeZaPredmet(int sifPredmet, int vaznost){
+		String SQL2 = "SELECT * FROM knjiga WHERE sifKnjiga IN (SELECT sifKnjiga FROM KnjigaPredmetObaveznost WHERE sifPredmet = ? AND "
+				+ "sifVaznObav IN (SELECT sifVaznObav FROM VaznostObaveznost WHERE sifObaveznost = 1 AND sifVaznost = ?))"; //obaveznost 1 je za DA, 2 za NE	
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			dbConnection = DBUtil.getConnection(DBType.MYSQL);
+			preparedStatement = dbConnection.prepareStatement(SQL2);
+			preparedStatement.setInt(1, sifPredmet);
+			preparedStatement.setInt(2, vaznost);
+			ResultSet rs = preparedStatement.executeQuery();
+			TKnjiga.getListaKnjiga(rs);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (dbConnection != null) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public static void getNeObavezneKnjigeZaPredmet(int sifPredmet, int vaznost){
+		String SQL2 = "SELECT * FROM knjiga WHERE sifKnjiga IN (SELECT sifKnjiga FROM KnjigaPredmetObaveznost WHERE sifPredmet = ? AND "
+				+ "sifVaznObav IN (SELECT sifVaznObav FROM VaznostObaveznost WHERE sifObaveznost = 2 AND sifVaznost = ?))"; //obaveznost 1 je za DA, 2 za NE	
+		Connection dbConnection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			dbConnection = DBUtil.getConnection(DBType.MYSQL);
+			preparedStatement = dbConnection.prepareStatement(SQL2);
+			preparedStatement.setInt(1, sifPredmet);
+			preparedStatement.setInt(2, vaznost);
+
+			ResultSet rs = preparedStatement.executeQuery();
+			TKnjiga.getListaKnjiga(rs);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (dbConnection != null) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 }

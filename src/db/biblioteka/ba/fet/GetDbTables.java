@@ -58,7 +58,6 @@ public class GetDbTables {
 	public static ArrayList<MKnjiga> getTableKnjigeZaPredmet(String predmet) {
 		TKnjiga.listaKnjiga.clear();
 		DBKnjiga.getKnjigaZaPredmet(predmet);
-		ArrayList<MKnjigaPredmetObaveznost> kpoList = getKPOzaPredmet(predmet);
 		ArrayList<MKnjiga> knjigaList = new ArrayList<>();
 		for (MKnjiga mKnjiga : TKnjiga.listaKnjiga) {
 			for (MKnjigaPredmetObaveznost kpo : getKPOzaPredmet(predmet)) {
@@ -76,6 +75,18 @@ public class GetDbTables {
 		TKnjigaPredmetObaveznost.listaKnjigaPredmetObaveznost.clear();
 		DBKnjigaPredmetObaveznost.getKnjiPredObavZaPredmet(predmet);
 		return TKnjigaPredmetObaveznost.listaKnjigaPredmetObaveznost;
+	}
+	
+	public static MKnjiga getObaveznuKnjiguZaVaznost(MPredmet predmet, int vaznost) {
+		TKnjiga.listaKnjiga.clear();
+		DBKnjiga.getObavezneKnjigeZaPredmet(predmet.getSifPredmet(), vaznost);
+		return TKnjiga.listaKnjiga.get(0);
+	}
+	
+	public static MKnjiga getNeObaveznuKnjiguZaVaznost(MPredmet predmet, int vaznost) {
+		TKnjiga.listaKnjiga.clear();
+		DBKnjiga.getNeObavezneKnjigeZaPredmet(predmet.getSifPredmet(), vaznost);
+		return TKnjiga.listaKnjiga.get(0);
 	}
 	
 	public static MKnjiga getKnjigaBySifra(int sifra){

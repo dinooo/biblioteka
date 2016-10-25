@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Sep 19, 2016 at 12:13 PM
+-- Generation Time: Oct 25, 2016 at 02:18 PM
 -- Server version: 5.7.15-0ubuntu0.16.04.1
--- PHP Version: 7.0.8-0ubuntu0.16.04.2
+-- PHP Version: 7.0.8-0ubuntu0.16.04.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -33,22 +33,6 @@ CREATE TABLE `autor` (
   `imeAutor` varchar(30) NOT NULL,
   `prezAutor` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `autor`
---
-
-INSERT INTO `autor` (`sifAutor`, `imeAutor`, `prezAutor`) VALUES
-(1, 'Amer', 'Hasanovic'),
-(2, 'Aljo', 'Mujcic'),
-(3, 'Naser', 'Prljaca'),
-(4, 'Zenan', 'Sehic'),
-(5, 'Emir', 'Meskovic'),
-(6, 'Edin', 'Pjanic'),
-(7, 'Mirza', 'Kusljugic'),
-(8, 'Amir', 'Nuhanovic'),
-(9, 'Jasmin', 'Zigic'),
-(10, 'Izudin', 'Softic');
 
 -- --------------------------------------------------------
 
@@ -94,9 +78,11 @@ CREATE TABLE `izdavac` (
 
 INSERT INTO `izdavac` (`sifIzdavac`, `nazIzdavac`) VALUES
 (1, 'UNTZ'),
-(2, 'Svjetlost'),
+(2, 'Svjetolost'),
 (3, 'NAM'),
-(4, 'Brzi');
+(4, 'OffSet'),
+(5, 'Hamidovic'),
+(6, 'Brzi');
 
 -- --------------------------------------------------------
 
@@ -121,12 +107,26 @@ CREATE TABLE `knjiga` (
 --
 
 INSERT INTO `knjiga` (`sifKnjiga`, `naslov`, `origNaslov`, `brStranica`, `godIzdanja`, `negBodovi`, `brPrimjeraka`, `sifIzdavac`, `sifVrstaKnjige`) VALUES
-(1, 'Optimizacione metode', 'Optimizacione metode u elektrotehnici', 500, '2014-01-01', 8, 4, 1, 1),
-(2, 'Numericke metode', 'Numericke metode u elektrotehnici', 432, '2012-01-01', 4, 2, 1, 1),
-(3, 'Operativni sistemi', 'Operativni sistemi', 432, '2015-01-01', 4, 5, 2, 1),
-(4, 'Baze', 'Baze podataka', 121, '2012-01-01', 3, 0, 4, 3),
-(5, 'Elektronika', 'Elektronika', 332, '2011-01-01', 6, 1, 3, 2),
-(6, 'Analogna elektronika', 'Analogna integrisana elektronika', 332, '2011-01-01', 5, 0, 1, 1);
+(1, 'Numericke metode', 'Numericke metode u elektrotehnici', 152, '2016-01-01', -5, 9, 1, 1),
+(2, 'Optimizacione metode', 'Optimizacione metode u elektrotehnici', 152, '2013-01-01', -5, 6, 2, 1),
+(3, 'Matematika 1', 'Matematika 1', 212, '2008-01-01', -5, 6, 1, 1),
+(4, 'Matematika 2', 'Matematika 2', 521, '2008-01-01', -5, 5, 1, 1),
+(5, 'Matematika 3', 'Matematika 3', 198, '2008-01-01', -5, 0, 1, 1),
+(6, 'Matematika 1 Zbirka', 'Matematika 1 Zbirka zadataka', 321, '2008-01-01', -5, 10, 1, 2),
+(7, 'Matematika 2 Zbirka', 'Matematika 2 Zbirka zadataka', 254, '2008-01-01', -5, 5, 1, 2),
+(8, 'Matematika 3 Zbirka', 'Matematika 3 Zbirka zadataka', 325, '2008-01-01', -5, 4, 1, 2),
+(9, 'Osnovi elektortehnike 1', 'Osnovi elektortehnike 1', 352, '2008-01-01', -5, 4, 1, 1),
+(10, 'Osnovi elektortehnike 2', 'Osnovi elektortehnike 2', 278, '2008-01-01', -5, 2, 1, 1),
+(11, 'Osnovi elektortehnike 1 zbirka', 'Osnovi elektortehnike 1 zbirka zadataka', 352, '2008-01-01', -5, 0, 1, 2),
+(12, 'Osnovi elektortehnike 2 zbirka', 'Osnovi elektortehnike 2 zbirka zadataka', 278, '2008-01-01', -5, 0, 1, 2),
+(13, 'Operativni sistemi', 'Operativni sistemi', 256, '2015-01-01', -5, 4, 1, 1),
+(14, 'Baze podataka', 'Baze podataka', 152, '2013-01-01', -5, 5, 1, 1),
+(15, 'Osnovi elektronike 1', 'Osnovi elektronike 1', 152, '2013-01-01', -5, 0, 1, 1),
+(16, 'Analogna integrisana elektornika', 'Analogna integrisana elektronika', 152, '2013-01-01', -5, 0, 2, 1),
+(17, 'Automatsko upravljanje 1', 'Automatsko upravljanje 1', 152, '2013-01-01', -5, 0, 3, 1),
+(18, 'Automatsko upravljanje 2', 'Automatsko upravljanje 2', 152, '2013-01-01', -5, 0, 2, 1),
+(19, 'Robotika 1', 'Robotika 1', 152, '2013-01-01', -5, 0, 3, 1),
+(20, 'Robotika 2', 'Robotika 2', 152, '2013-01-01', -5, 0, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -141,20 +141,6 @@ CREATE TABLE `KnjigaAutorRBr` (
   `sifAutorRBr` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `KnjigaAutorRBr`
---
-
-INSERT INTO `KnjigaAutorRBr` (`sifKnjigaAutorRBr`, `sifKnjiga`, `sifAutor`, `sifAutorRBr`) VALUES
-(1, 1, 8, 1),
-(2, 2, 8, 1),
-(3, 2, 10, 2),
-(4, 3, 1, 1),
-(5, 3, 6, 2),
-(6, 4, 5, 1),
-(7, 5, 2, 1),
-(8, 6, 2, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -167,6 +153,19 @@ CREATE TABLE `KnjigaPredmetObaveznost` (
   `sifKnjiga` int(11) NOT NULL,
   `sifPredmet` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `KnjigaPredmetObaveznost`
+--
+
+INSERT INTO `KnjigaPredmetObaveznost` (`sifKnjPredObav`, `sifVaznObav`, `sifKnjiga`, `sifPredmet`) VALUES
+(1, 1, 14, 1),
+(2, 1, 15, 3),
+(3, 2, 16, 3),
+(4, 1, 17, 9),
+(5, 3, 18, 9),
+(6, 5, 19, 9),
+(7, 2, 20, 9);
 
 -- --------------------------------------------------------
 
@@ -191,15 +190,19 @@ CREATE TABLE `nastavnik` (
 --
 
 INSERT INTO `nastavnik` (`sifNastavnik`, `imeNastavnik`, `prezNastavnik`, `zvanje`, `negBodovi`, `password`, `bibliotekar`, `brPosudjenihKnjiga`, `brRezervacija`) VALUES
-(1, 'Emir', 'Meskovic', 'Docent profesor', 0, 'emir', 1, 0, 0),
+(1, 'Emir', 'Meskovic', 'Vanredan profesor', 0, 'emir', 1, 1, 1),
 (2, 'Amer', 'Hasanovic', 'Vanredan profesor', 0, 'amer', 0, 0, 0),
-(3, 'Edin', 'Pjanic', 'Docent profesor', 0, 'edin', 0, 0, 0),
+(3, 'Edin', 'Pjanic', 'Vanredan profesor', 0, 'edin', 0, 0, 0),
 (4, 'Aljo', 'Mujcic', 'Vanredan profesor', 0, 'aljo', 0, 0, 0),
-(5, 'Dario', 'Osmanovic', 'Asistent', 0, 'dario', 0, 0, 0),
-(6, 'Selvin', 'Fehric', 'Asistent', 0, 'selvin', 0, 0, 0),
+(5, 'Nermin', 'Suljanovic', 'Vanredan profesor', 0, 'nermin', 0, 0, 0),
+(6, 'Asmir', 'Gogic', 'Docent profesor', 0, 'asmir', 0, 0, 0),
 (7, 'Naser', 'Prljaca', 'Redovan profesor', 0, 'naser', 0, 0, 0),
-(8, 'Zenan', 'Sehic', 'Redovan profesor', 0, 'zenan', 0, 0, 0),
-(9, 'Asmir', 'Gogic', 'Docent profesor', 0, 'asmir', 0, 0, 0);
+(8, 'Amir', 'Nuhanovic', 'Redovan profesor', 0, 'amir', 0, 0, 0),
+(9, 'Amir', 'Tokic', 'Vanredan profesor', 0, 'amir', 0, 0, 0),
+(10, 'Dario', 'Osmanovic', 'Asistent', 0, 'dario', 0, 0, 0),
+(11, 'Lejla', 'Mehmedovic-Banjanovic', 'Vanredan profesor', 0, 'lejla', 0, 0, 0),
+(12, 'Selvin', 'Fehric', 'Asistent', 0, 'selvin', 0, 0, 0),
+(13, 'Slobodan', 'Manojlovic', 'Asistent', 0, 'slobodan', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -239,17 +242,16 @@ CREATE TABLE `predmet` (
 --
 
 INSERT INTO `predmet` (`sifPredmet`, `nazPredmet`, `kratPredmet`, `sifNastavnik`, `sifSemestar`) VALUES
-(1, 'Razvoj Softvera', 'RS', 1, 7),
-(2, 'Baze Podataka', 'BP', 1, 7),
-(3, 'Operativni Sistemi', 'OS', 2, 6),
-(4, 'Algoritmi', 'ALG', 3, 5),
-(5, 'Strukture Podataka', 'SP', 3, 6),
-(6, 'Windows Programiranje', 'WP', 3, 4),
-(7, 'Teorija informacija i kodovanje', 'TIK', 4, 5),
-(8, 'Osnovic elektronike', 'TIK', 4, 3),
-(9, 'Baze Podataka Lab', 'BP Lab', 5, 7),
-(10, 'Automatsko Upravljanje I', 'AUI', 7, 5),
-(11, 'Automatsko Upravljanje II', 'AUII', 7, 6);
+(1, 'Baze podataka', 'BP', 1, 7),
+(2, 'Operativni sistemi', 'OS', 2, 6),
+(3, 'Osnovi elektronike', 'OElektr', 4, 3),
+(4, 'Analogna integrisana elektronika', 'AIE', 4, 4),
+(5, 'Signali i sistemi', 'SIS', 5, 5),
+(6, 'Numericke metode u elektrotehnici', 'Num', 8, 4),
+(7, 'Optimizacione metode u elektrotehnici', 'Opt', 8, 5),
+(8, 'Sistemi u realnom vremenu', 'SRV', 11, 8),
+(9, 'Automatsko upravljanje 1', 'AU1', 7, 5),
+(10, 'Automatsko upravljanje 2', 'AU2', 7, 6);
 
 -- --------------------------------------------------------
 
@@ -271,18 +273,66 @@ CREATE TABLE `primjerak` (
 --
 
 INSERT INTO `primjerak` (`sifPrimjerak`, `inventarniBr`, `datumNabavke`, `stanje`, `rezervisan`, `sifKnjiga`) VALUES
-(1, 'opt01', '2016-09-04', 'Odli?no', 1, 1),
-(2, 'opt02', '2016-09-04', 'Odli?no', 0, 1),
-(3, 'opt03', '2016-09-04', 'Odli?no', 0, 1),
-(4, 'opt04', '2016-09-04', 'Odli?no', 0, 1),
-(5, 'num01', '2016-09-07', 'Odli?no', 1, 2),
-(6, 'num02', '2016-09-07', 'Odli?no', 0, 2),
-(7, 'os01', '2016-09-07', 'Odli?no', 1, 3),
-(8, 'os02', '2016-09-05', 'Odli?no', 1, 3),
-(9, 'os03', '2016-09-05', 'Odli?no', 0, 3),
-(10, 'os04', '2016-09-05', 'Odli?no', 0, 3),
-(11, 'os05', '2016-09-05', 'Odli?no', 0, 3),
-(12, 'El01', '2016-09-05', 'Odli?no', 1, 5);
+(1, 'num01', '2016-03-01', 'Odli?no', 0, 1),
+(2, 'num02', '2016-03-01', 'Odli?no', 0, 1),
+(3, 'num03', '2016-03-01', 'Odli?no', 0, 1),
+(4, 'num04', '2016-03-01', 'Odli?no', 0, 1),
+(5, 'num05', '2016-03-01', 'Odli?no', 0, 1),
+(6, 'num06', '2016-03-01', 'Odli?no', 0, 1),
+(7, 'num07', '2016-03-01', 'Odli?no', 0, 1),
+(8, 'num08', '2016-03-01', 'Odli?no', 0, 1),
+(9, 'num09', '2016-03-01', 'Odli?no', 0, 1),
+(10, 'opt01', '2016-03-01', 'Odli?no', 0, 2),
+(11, 'opt02', '2016-03-01', 'Odli?no', 0, 2),
+(12, 'opt03', '2016-03-01', 'Odli?no', 0, 2),
+(13, 'opt04', '2016-03-01', 'Odli?no', 0, 2),
+(14, 'opt05', '2016-03-01', 'Odli?no', 0, 2),
+(15, 'opt06', '2016-03-01', 'Odli?no', 0, 2),
+(16, 'mat101', '2016-03-01', 'Odli?no', 0, 3),
+(17, 'mat102', '2016-03-01', 'Odli?no', 0, 3),
+(18, 'mat103', '2016-03-01', 'Odli?no', 0, 3),
+(19, 'mat104', '2016-03-01', 'Odli?no', 0, 3),
+(20, 'mat105', '2016-03-01', 'Odli?no', 0, 3),
+(21, 'mat106', '2016-03-01', 'Odli?no', 0, 3),
+(22, 'mat201', '2016-03-01', 'Odli?no', 2, 4),
+(23, 'mat202', '2016-03-01', 'Odli?no', 0, 4),
+(24, 'mat203', '2016-03-01', 'Odli?no', 0, 4),
+(25, 'mat204', '2016-03-01', 'Odli?no', 0, 4),
+(26, 'mat205', '2016-03-01', 'Odli?no', 0, 4),
+(30, 'mat1z01', '2016-03-01', 'Odli?no', 0, 6),
+(31, 'mat1z02', '2016-03-01', 'Odli?no', 0, 6),
+(32, 'mat1z03', '2016-03-01', 'Odli?no', 0, 6),
+(33, 'mat1z04', '2016-03-01', 'Odli?no', 0, 6),
+(34, 'mat1z05', '2016-03-01', 'Odli?no', 0, 6),
+(35, 'mat1z06', '2016-03-01', 'Odli?no', 0, 6),
+(36, 'mat1z07', '2016-03-01', 'Odli?no', 0, 6),
+(37, 'mat1z08', '2016-03-01', 'Odli?no', 0, 6),
+(38, 'mat1z09', '2016-03-01', 'Odli?no', 0, 6),
+(39, 'mat1z10', '2016-03-01', 'Odli?no', 0, 6),
+(40, 'mat2z01', '2016-03-01', 'Odli?no', 0, 7),
+(41, 'mat2z02', '2016-03-01', 'Odli?no', 0, 7),
+(42, 'mat2z03', '2016-03-01', 'Odli?no', 0, 7),
+(43, 'mat2z04', '2016-03-01', 'Odli?no', 0, 7),
+(44, 'mat2z05', '2016-03-01', 'Odli?no', 0, 7),
+(45, 'mat3z01', '2016-03-01', 'Odli?no', 0, 8),
+(46, 'mat3z02', '2016-03-01', 'Odli?no', 0, 8),
+(47, 'mat3z03', '2016-03-01', 'Odli?no', 0, 8),
+(48, 'mat3z04', '2016-03-01', 'Odli?no', 0, 8),
+(49, 'oe101', '2016-03-01', 'Odli?no', 0, 9),
+(50, 'oe102', '2016-03-01', 'Odli?no', 0, 9),
+(51, 'oe103', '2016-03-01', 'Odli?no', 0, 9),
+(52, 'oe104', '2016-03-01', 'Odli?no', 0, 9),
+(53, 'oe201', '2016-03-01', 'Odli?no', 0, 10),
+(54, 'oe202', '2016-03-01', 'Odli?no', 0, 10),
+(55, 'os01', '2016-03-01', 'Odli?no', 0, 13),
+(56, 'os02', '2016-03-01', 'Odli?no', 0, 13),
+(57, 'os03', '2016-03-01', 'Odli?no', 0, 13),
+(58, 'os04', '2016-03-01', 'Odli?no', 0, 13),
+(59, 'bp01', '2016-03-01', 'Odli?no', 0, 14),
+(60, 'bp02', '2016-03-01', 'Odli?no', 0, 14),
+(61, 'bp03', '2016-03-01', 'Odli?no', 0, 14),
+(62, 'bp04', '2016-03-01', 'Odli?no', 0, 14),
+(63, 'bp05', '2016-03-01', 'Odli?no', 0, 14);
 
 -- --------------------------------------------------------
 
@@ -307,11 +357,8 @@ CREATE TABLE `rezervacija` (
 --
 
 INSERT INTO `rezervacija` (`sifRezervacija`, `datRezervacija`, `datPodizanja`, `datVracanja`, `datKadVracena`, `sifKorisnik`, `sifPrimjerak`, `nastStud`, `odobrena`) VALUES
-(1, '2016-09-19', NULL, '2016-09-30', NULL, 1, 12, 2, 0),
-(2, '2016-09-19', NULL, '2016-11-18', NULL, 1, 5, 2, 0),
-(3, '2016-09-19', NULL, '2016-10-21', NULL, 1, 7, 2, 0),
-(4, '2016-09-19', NULL, '2016-09-30', NULL, 3, 8, 2, 0),
-(5, '2016-09-19', NULL, '2016-12-09', NULL, 3, 1, 2, 0);
+(1, '2016-10-25', '2016-10-25', '2016-10-29', '2016-10-25', 1, 1, 1, -1),
+(2, '2016-10-25', '2016-10-25', '2016-10-28', NULL, 1, 22, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -326,6 +373,14 @@ CREATE TABLE `RezervacijaPrimjerakNastavnik` (
   `sifNastavnik` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `RezervacijaPrimjerakNastavnik`
+--
+
+INSERT INTO `RezervacijaPrimjerakNastavnik` (`sifRezPrimNast`, `sifRezervacija`, `sifPrimjerak`, `sifNastavnik`) VALUES
+(1, 1, 1, 1),
+(2, 2, 22, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -338,17 +393,6 @@ CREATE TABLE `RezervacijaPrimjerakStudent` (
   `sifPrimjerak` int(11) NOT NULL,
   `sifStudent` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `RezervacijaPrimjerakStudent`
---
-
-INSERT INTO `RezervacijaPrimjerakStudent` (`sifRezPrimStud`, `sifRezervacija`, `sifPrimjerak`, `sifStudent`) VALUES
-(1, 1, 12, 1),
-(2, 2, 5, 1),
-(3, 3, 7, 1),
-(4, 4, 8, 3),
-(5, 5, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -398,13 +442,15 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`sifStudent`, `imeStudent`, `prezStudent`, `brIndexa`, `negBodovi`, `password`, `brPosudjenihKnjiga`, `brRezervacija`, `sifSemestar`) VALUES
-(1, 'Dino', 'Zecevic', 'dino', 0, 'dino', 0, 3, 8),
-(2, 'Mirza', 'Omerkic', 'mirza', 0, 'mirza', 0, 0, 6),
-(3, 'Mizbah', 'Alic', 'mizbah', 0, 'mizbah', 0, 2, 4),
-(4, 'Alen', 'Avdic', 'alen', 0, 'alen', 0, 0, 1),
-(5, 'Sinisa', 'Suljkic', 'sinisa', 0, 'sinisa', 0, 0, 2),
-(6, 'Suad', 'Suljic', 'suad', 0, 'suad', 0, 0, 4),
-(7, 'Jasmin', 'Zigic', 'jasmin', 0, 'jasmin', 0, 0, 7);
+(1, 'Dino', 'Zecevic', 'dino', 0, 'dino', 0, 0, 1),
+(2, 'Mizbah', 'Alic', 'mizbah', 0, 'mizbah', 0, 0, 1),
+(3, 'Mirza', 'Omerkic', 'mirza', 0, 'mirza', 0, 0, 1),
+(4, 'Sinisa', 'Suljkic', 'sinisa', 0, 'sinisa', 0, 0, 1),
+(5, 'Suad', 'Suljic', 'suad', 0, 'suad', 0, 0, 1),
+(6, 'Jasmin', 'Zigic', 'jasmin', 0, 'jasmin', 0, 0, 1),
+(7, 'Alen', 'Basic', 'alen', 0, 'alen', 0, 0, 1),
+(8, 'Zlatan', 'Zecevic', 'zlatan', 0, 'zlatan', 0, 0, 1),
+(9, 'Akbar', 'Zecevic', 'akbar', 0, 'akbar', 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -634,7 +680,7 @@ ALTER TABLE `vrstaKnjige`
 -- AUTO_INCREMENT for table `autor`
 --
 ALTER TABLE `autor`
-  MODIFY `sifAutor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `sifAutor` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `autorRBr`
 --
@@ -644,27 +690,27 @@ ALTER TABLE `autorRBr`
 -- AUTO_INCREMENT for table `izdavac`
 --
 ALTER TABLE `izdavac`
-  MODIFY `sifIzdavac` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `sifIzdavac` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `knjiga`
 --
 ALTER TABLE `knjiga`
-  MODIFY `sifKnjiga` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `sifKnjiga` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `KnjigaAutorRBr`
 --
 ALTER TABLE `KnjigaAutorRBr`
-  MODIFY `sifKnjigaAutorRBr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `sifKnjigaAutorRBr` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `KnjigaPredmetObaveznost`
 --
 ALTER TABLE `KnjigaPredmetObaveznost`
-  MODIFY `sifKnjPredObav` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `sifKnjPredObav` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `nastavnik`
 --
 ALTER TABLE `nastavnik`
-  MODIFY `sifNastavnik` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `sifNastavnik` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `obaveznost`
 --
@@ -674,27 +720,27 @@ ALTER TABLE `obaveznost`
 -- AUTO_INCREMENT for table `predmet`
 --
 ALTER TABLE `predmet`
-  MODIFY `sifPredmet` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `sifPredmet` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `primjerak`
 --
 ALTER TABLE `primjerak`
-  MODIFY `sifPrimjerak` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `sifPrimjerak` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 --
 -- AUTO_INCREMENT for table `rezervacija`
 --
 ALTER TABLE `rezervacija`
-  MODIFY `sifRezervacija` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `sifRezervacija` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `RezervacijaPrimjerakNastavnik`
 --
 ALTER TABLE `RezervacijaPrimjerakNastavnik`
-  MODIFY `sifRezPrimNast` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `sifRezPrimNast` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `RezervacijaPrimjerakStudent`
 --
 ALTER TABLE `RezervacijaPrimjerakStudent`
-  MODIFY `sifRezPrimStud` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `sifRezPrimStud` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `semestar`
 --
@@ -704,7 +750,7 @@ ALTER TABLE `semestar`
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `sifStudent` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `sifStudent` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `vaznost`
 --
